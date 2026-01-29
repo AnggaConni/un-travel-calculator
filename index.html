@@ -96,10 +96,10 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
                     <i class="ph ph-airplane-tilt text-2xl text-blue-300"></i>
-                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v2.2</span></span>
+                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v2.5</span></span>
                 </div>
                 <div class="text-xs text-blue-200 hidden md:block text-right">
-                    Auto-Calculation Engine v2.2 (Foolproof)
+                    Auto-Calculation Engine v2.5 (Global Showcase)
                     <div class="font-semibold text-blue-100 mt-0.5">Angga Conni Saputra</div>
                 </div>
             </div>
@@ -116,31 +116,95 @@
                     <i class="ph ph-sliders-horizontal text-lg"></i> Global Variables (Percentage)
                 </h2>
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Current UNORE</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-2 text-slate-400">Rp</span>
-                            <input type="number" id="unoreRate" value="15400" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-mono text-right font-bold text-blue-900">
+                    <!-- CURRENCY SELECTION UPDATE -->
+                    <div class="col-span-1">
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Target Currency & UNORE</label>
+                        <div class="flex gap-2">
+                            <select id="currencyCode" class="w-1/3 px-1 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition text-xs font-bold text-slate-700 bg-slate-50 cursor-pointer">
+                                <optgroup label="Default">
+                                    <option value="IDR" selected>IDR 🇮🇩</option>
+                                </optgroup>
+                                <optgroup label="Major Currencies">
+                                    <option value="USD">USD 🇺🇸</option>
+                                    <option value="EUR">EUR 🇪🇺</option>
+                                    <option value="GBP">GBP 🇬🇧</option>
+                                    <option value="CHF">CHF 🇨🇭 (Geneva)</option>
+                                    <option value="JPY">JPY 🇯🇵</option>
+                                    <option value="CNY">CNY 🇨🇳</option>
+                                </optgroup>
+                                <optgroup label="UN Regional HQs">
+                                    <option value="THB">THB 🇹🇭 (Bangkok)</option>
+                                    <option value="KES">KES 🇰🇪 (Nairobi)</option>
+                                    <option value="ETB">ETB 🇪🇹 (Addis)</option>
+                                    <option value="EGP">EGP 🇪🇬 (Cairo)</option>
+                                    <option value="JOD">JOD 🇯🇴 (Amman)</option>
+                                    <option value="CLP">CLP 🇨🇱 (Santiago)</option>
+                                </optgroup>
+                                <optgroup label="Asia Pacific">
+                                    <option value="MYR">MYR 🇲🇾</option>
+                                    <option value="PHP">PHP 🇵🇭</option>
+                                    <option value="SGD">SGD 🇸🇬</option>
+                                    <option value="VND">VND 🇻🇳</option>
+                                    <option value="MMK">MMK 🇲🇲</option>
+                                    <option value="KHR">KHR 🇰🇭</option>
+                                    <option value="LAK">LAK 🇱🇦</option>
+                                    <option value="INR">INR 🇮🇳</option>
+                                    <option value="PKR">PKR 🇵🇰</option>
+                                    <option value="BDT">BDT 🇧🇩</option>
+                                    <option value="LKR">LKR 🇱🇰</option>
+                                    <option value="NPR">NPR 🇳🇵</option>
+                                    <option value="AFN">AFN 🇦🇫</option>
+                                    <option value="KRW">KRW 🇰🇷</option>
+                                    <option value="AUD">AUD 🇦🇺</option>
+                                    <option value="NZD">NZD 🇳🇿</option>
+                                    <option value="FJD">FJD 🇫🇯</option>
+                                    <option value="PGK">PGK 🇵🇬</option>
+                                    <option value="TLS">USD (Timor-Leste)</option>
+                                </optgroup>
+                                <optgroup label="Peacekeeping/Field">
+                                    <option value="LBP">LBP 🇱🇧 (UNIFIL)</option>
+                                    <option value="CDF">CDF 🇨🇩 (MONUSCO)</option>
+                                    <option value="SSD">SSD 🇸🇸 (UNMISS)</option>
+                                    <option value="IQD">IQD 🇮🇶</option>
+                                    <option value="YER">YER 🇾🇪</option>
+                                    <option value="SYP">SYP 🇸🇾</option>
+                                    <option value="HTG">HTG 🇭🇹</option>
+                                    <option value="XOF">XOF (West Africa)</option>
+                                    <option value="XAF">XAF (Central Africa)</option>
+                                </optgroup>
+                                <optgroup label="Others">
+                                    <option value="TRY">TRY 🇹🇷</option>
+                                    <option value="ZAR">ZAR 🇿🇦</option>
+                                    <option value="NGN">NGN 🇳🇬</option>
+                                    <option value="BRL">BRL 🇧🇷</option>
+                                    <option value="MXN">MXN 🇲🇽</option>
+                                    <option value="COP">COP 🇨🇴</option>
+                                    <option value="ARS">ARS 🇦🇷</option>
+                                    <option value="CAD">CAD 🇨🇦</option>
+                                </optgroup>
+                            </select>
+                            <input type="number" id="unoreRate" value="15400" class="w-2/3 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-mono text-right font-bold text-blue-900" placeholder="Rate">
                         </div>
+                        <p class="text-[9px] text-slate-400 mt-1">Select local currency & exchange rate</p>
                     </div>
+                    
                     <div>
-                        <!-- Spacer -->
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">Meal Deduction %</label>
-                        <div class="relative">
-                            <input type="number" id="mealDedRate" value="30" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-mono text-right">
-                            <span class="absolute right-3 top-2 text-slate-400 text-sm">%</span>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Meal Ded. %</label>
+                                <div class="relative">
+                                    <input type="number" id="mealDedRate" value="30" class="w-full px-2 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-mono text-right text-sm">
+                                    <span class="absolute right-2 top-2 text-slate-400 text-xs">%</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-purple-600 mb-1">Incidental %</label>
+                                <div class="relative">
+                                    <input type="number" id="incidentalRate" value="20" class="w-full px-2 py-2 border border-purple-200 bg-purple-50 text-purple-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none transition font-mono text-right font-bold text-sm">
+                                    <span class="absolute right-2 top-2 text-purple-400 text-xs">%</span>
+                                </div>
+                            </div>
                         </div>
-                        <p class="text-[10px] text-slate-400 mt-1">Standard 3 meals</p>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-purple-600 mb-1">Incidental %</label>
-                        <div class="relative">
-                            <input type="number" id="incidentalRate" value="20" class="w-full px-3 py-2 border border-purple-200 bg-purple-50 text-purple-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none transition font-mono text-right font-bold">
-                            <span class="absolute right-3 top-2 text-purple-400 text-sm">%</span>
-                        </div>
-                        <p class="text-[10px] text-purple-400 mt-1">Min. Entitlement (Payable)</p>
                     </div>
                 </div>
             </div>
@@ -310,7 +374,7 @@
                     <div class="flex gap-3 items-center">
                          <div class="text-right mr-4">
                             <div class="text-xs text-slate-400">Total Payout (Est.)</div>
-                            <div class="font-bold text-lg text-emerald-600" id="grandTotalDisplay">IDR 0</div>
+                            <div class="font-bold text-lg text-emerald-600" id="grandTotalDisplay">0</div>
                         </div>
                         <button onclick="exportToExcelWithFormulas()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition shadow-md">
                             <i class="ph ph-file-xls text-lg"></i> Export Excel (Audit Ready)
@@ -333,7 +397,7 @@
                                 <th class="px-4 py-3 text-right font-bold text-blue-700">Net Payable ($)</th>
                                 <th class="px-4 py-3 text-right">TF ($)</th>
                                 <th class="px-4 py-3 text-right bg-gray-50">Total USD</th>
-                                <th class="px-4 py-3 text-right font-bold text-emerald-700">Total IDR</th>
+                                <th class="px-4 py-3 text-right font-bold text-emerald-700" id="headerTotalLocal">Total (Local)</th>
                             </tr>
                         </thead>
                         <tbody id="resultBody" class="divide-y divide-slate-100">
@@ -581,25 +645,50 @@
 
         // --- 1. SAMPLE DATA ---
         function loadSampleRef() {
+            // Updated with International Cities
             const data = 
 `Paris\t400\t60\t70
 Jakarta\t238\t55\t47
 Bali\t190\t45\t47
 New York\t450\t65\t90
 Bangkok\t210\t50\t47
-Dili\t185\t40\t47`;
+Dili\t185\t40\t47
+Geneva\t380\t55\t60
+Nairobi\t250\t50\t47
+Addis Ababa\t220\t45\t47
+Beirut\t280\t50\t47
+Santiago\t240\t50\t47`;
             document.getElementById('refInput').value = data;
         }
 
         function loadSampleParticipants() {
-            // Updated Sample Data: Name | City | Days | Hotel Days | Meal Days | Legs
+            // Updated Sample Data: 25 Pax - International Showcase
             const data = 
 `Ahmad Fauzi\tParis\t5\t5\t2\t4
 Sarah Connor\tJakarta\t3\t0\t0\t0
 John Wick\tNew York\t4\t4\t4\t4
 Ratna Sari\tBali\t3\tY\t1\t4
 Budi Doremi\tDili\t10\tY\t10\t2
-Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
+Siti Nurhaliza\tBangkok\t4\tN\t0\t4
+Jean-Claude\tGeneva\t5\tY\t3\t4
+Fatima Ahmed\tNairobi\t6\tY\t6\t4
+Wei Chen\tNew York\t5\tN\t0\t4
+Maria Garcia\tSantiago\t4\tY\t2\t4
+Yuki Tanaka\tJakarta\t3\tY\t3\t4
+Rahul Sharma\tBangkok\t5\tY\t0\t4
+Ahmed Al-Mansour\tBeirut\t4\tY\t4\t4
+Elena Popov\tGeneva\t3\tN\t0\t4
+Samuel Eto'o\tAddis Ababa\t5\tY\t5\t4
+Chantal Biya\tParis\t4\tY\t2\t4
+Bambang Pamungkas\tJakarta\t2\tY\t2\t0
+Cinta Laura\tNew York\t7\tN\t0\t4
+Deddy Corbuzier\tParis\t5\tY\t5\t4
+Raffi Ahmad\tBali\t3\tY\t3\t4
+Nagita Slavina\tBali\t3\tY\t3\t4
+Joko Anwar\tDili\t6\tN\t0\t4
+Sri Mulyani\tNew York\t5\tY\t5\t4
+Reza Rahadian\tParis\t6\tY\t6\t4
+Angga Conni Saputra\tParis\t7\tY\t7\t4`;
             document.getElementById('partInput').value = data;
         }
 
@@ -628,6 +717,7 @@ Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
         }
 
         function formatCurrency(num, currency = 'USD') {
+            // Basic formatter, uses English formatting with dynamic currency code
             return new Intl.NumberFormat('en-US', { 
                 style: 'currency', 
                 currency: currency,
@@ -643,6 +733,7 @@ Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
         function processData(useFloorRule = true) {
             globalFloorRuleActive = useFloorRule; 
             const unore = parseFloat(document.getElementById('unoreRate').value) || 15400;
+            const currencyCode = document.getElementById('currencyCode').value; // GET CURRENCY
             const mealPercent = parseFloat(document.getElementById('mealDedRate').value) || 30;
             const incidentalPercent = parseFloat(document.getElementById('incidentalRate').value) || 20;
 
@@ -665,10 +756,14 @@ Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
             const partLines = parseTSV(partRaw);
 
             calculatedData = [];
-            let totalGrandIDR = 0;
+            let totalGrandLocal = 0; 
 
             const tbody = document.getElementById('resultBody');
             tbody.innerHTML = '';
+            
+            // Update Table Header for Currency
+            const headerLocal = document.getElementById('headerTotalLocal');
+            if(headerLocal) headerLocal.innerText = `Total (${currencyCode})`;
 
             // Update Mode Badge
             const badge = document.getElementById('modeBadge');
@@ -703,7 +798,7 @@ Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
                 if (!ref) {
                     const tr = document.createElement('tr');
                     tr.className = "bg-red-50 text-red-600";
-                    tr.innerHTML = `<td colspan="12" class="px-6 py-4">Error: City <strong>${displayCity}</strong> not found.</td>`;
+                    tr.innerHTML = `<td colspan="12" class="px-6 py-4">Error: City <strong>${displayCity}</strong> not found. Please update Reference Data.</td>`;
                     tbody.appendChild(tr);
                     return;
                 }
@@ -741,9 +836,9 @@ Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
 
                 // 6. Grand Totals
                 const totalUSD = netPayable + totalTF;
-                const totalIDR = totalUSD * unore;
+                const totalLocal = totalUSD * unore; // Calculate Local Currency
 
-                totalGrandIDR += totalIDR;
+                totalGrandLocal += totalLocal;
 
                 calculatedData.push({
                     name, displayCity, days, 
@@ -752,7 +847,7 @@ Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
                     totalIncidental,
                     deductions: totalDeductions,
                     netPayable, 
-                    totalTF, totalUSD, totalIDR,
+                    totalTF, totalUSD, totalLocal,
                     actualHotelDays, actualMealDays, actualLegs
                 });
 
@@ -778,12 +873,12 @@ Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
                         <br><span class="text-[9px] text-slate-400">(${actualLegs} legs)</span>
                     </td>
                     <td class="px-4 py-3 text-right font-bold text-slate-700">$${totalUSD.toFixed(2)}</td>
-                    <td class="px-4 py-3 text-right font-bold text-emerald-600 text-xs">${formatCurrency(totalIDR, 'IDR')}</td>
+                    <td class="px-4 py-3 text-right font-bold text-emerald-600 text-xs">${formatCurrency(totalLocal, currencyCode)}</td>
                 `;
                 tbody.appendChild(tr);
             });
 
-            document.getElementById('grandTotalDisplay').innerText = formatCurrency(totalGrandIDR, 'IDR');
+            document.getElementById('grandTotalDisplay').innerText = formatCurrency(totalGrandLocal, currencyCode);
             document.getElementById('resultSection').classList.remove('hidden');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
         }
@@ -796,6 +891,7 @@ Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
             }
 
             const unore = parseFloat(document.getElementById('unoreRate').value) || 15400;
+            const currencyCode = document.getElementById('currencyCode').value;
             const incidentalPercent = parseFloat(document.getElementById('incidentalRate').value) || 20;
 
             // Define Table Header
@@ -836,7 +932,7 @@ Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
                 <th>Net Payable DSA ($)</th>
                 <th>Total TF ($)</th>
                 <th>Total USD</th>
-                <th>Total IDR (Rate: ${unore})</th>
+                <th>Total ${currencyCode} (Rate: ${unore})</th>
             </tr>`;
 
             // Data Rows with Formula Injection
@@ -850,7 +946,6 @@ Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
                 
                 // Col J: Net Payable = MAX(Total Incidental, (Base*Days) - Deductions)
                 // Note: Logic logic is simplified here using pre-calculated deduction value. 
-                // Creating a string formula for deductions with variable days is complex in Excel HTML without extra helper columns.
                 // We trust the JS deduction calculation for the "Audit" view.
                 const floorLogic = globalFloorRuleActive 
                     ? `MAX(H${r}, (D${r}*C${r})-I${r})` 
@@ -877,7 +972,7 @@ Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
                     <td x:num x:fmla="${formulaNetPayable}">${row.netPayable.toFixed(2)}</td>
                     <td x:num>${row.totalTF}</td>
                     <td x:num x:fmla="${formulaTotalUSD}">${row.totalUSD.toFixed(2)}</td>
-                    <td x:num x:fmla="${formulaTotalIDR}">${row.totalIDR.toFixed(0)}</td>
+                    <td x:num x:fmla="${formulaTotalIDR}">${row.totalLocal.toFixed(0)}</td>
                 </tr>`;
             });
 
@@ -887,7 +982,7 @@ Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
             const link = document.createElement("a");
             const url = URL.createObjectURL(blob);
             link.href = url;
-            link.download = "UN_Travel_Audit_Report_v2.2.xls";
+            link.download = "UN_Travel_Audit_Report_v2.5.xls";
             document.body.appendChild(link);
             link.click();
             document.body.appendChild(link);

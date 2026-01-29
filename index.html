@@ -73,6 +73,25 @@
             transition: none; /* Stop animation when paused */
             background: #f59e0b; /* Turn orange when paused */
         }
+        /* Modal Animation */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 300ms, transform 300ms;
+        }
+        .modal-exit {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 200ms, transform 200ms;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-20 relative">
@@ -83,10 +102,10 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
                     <i class="ph ph-airplane-tilt text-2xl text-blue-300"></i>
-                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v3.6</span></span>
+                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v3.9</span></span>
                 </div>
                 <div class="text-xs text-blue-200 hidden md:block text-right">
-                    Auto-Calculation Engine v3.6 (Smart Gen)
+                    Auto-Calculation Engine v3.9 (Final)
                     <div class="font-semibold text-blue-100 mt-0.5">Angga Conni Saputra</div>
                 </div>
             </div>
@@ -227,22 +246,22 @@
                 
                 <div class="min-h-[180px] flex flex-col justify-center">
                     
-                    <!-- Slide 1: Quick Guide -->
+                    <!-- Slide 1: Currency Logic -->
                     <div class="slide-content active-slide" id="slide-0">
                         <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                            <i class="ph ph-info text-blue-600"></i> Smart Auto-Generate
+                            <i class="ph ph-currency-circle-dollar text-blue-600"></i> Dual Currency Logic
                         </h3>
                         <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                            <li><strong>New Feature:</strong> "Load Sample" on Participant side is now smart.</li>
-                            <li>It reads your Reference Data cities first.</li>
-                            <li>Then it generates 10 dummy participants <strong>automatically matched</strong> to those cities. No more "City not found" errors!</li>
+                            <li><strong>Local Base (IDR):</strong> For local staff paid in local currency.</li>
+                            <li><strong>USD Base ($):</strong> For international experts paid in USD.</li>
+                            <li><strong>Advice:</strong> Run separate calculations for each group.</li>
                         </ul>
                     </div>
 
-                    <!-- Slide 2: Deduction Logic -->
+                    <!-- Slide 2: Deduction Logic (CLARIFIED) -->
                     <div class="slide-content hidden-slide" id="slide-1">
                         <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                            <i class="ph ph-scissors text-red-600"></i> Deduction Logic
+                            <i class="ph ph-scissors text-red-600"></i> Deduction Explained
                         </h3>
                         <div class="text-sm text-blue-800 space-y-2">
                             <p class="font-semibold text-xs">If Organizer pays -> We deduct from DSA.</p>
@@ -277,16 +296,15 @@
                         </ul>
                     </div>
 
-                    <!-- Slide 5: Currency Logic -->
+                    <!-- Slide 5: NEW TIP - Advance Payment -->
                     <div class="slide-content hidden-slide" id="slide-4">
                         <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                            <i class="ph ph-currency-circle-dollar text-blue-600"></i> Dual Currency Logic
+                            <i class="ph ph-money text-emerald-600"></i> Advance Payments
                         </h3>
-                        <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                            <li><strong>Local Base (IDR):</strong> For local staff paid in local currency.</li>
-                            <li><strong>USD Base ($):</strong> For international experts paid in USD.</li>
-                            <li><strong>Advice:</strong> Run separate calculations for each group.</li>
-                        </ul>
+                        <div class="text-sm text-blue-800 space-y-2">
+                            <p>Typically, staff receive <strong>80% of estimated DSA</strong> before travel.</p>
+                            <p>This calculator shows the <strong>100% Final Entitlement</strong>. Deduct any advance received manually during the claim settlement (F10).</p>
+                        </div>
                     </div>
 
                     <!-- Slide 6: External Link -->
@@ -331,6 +349,10 @@
                     <div class="flex justify-between items-center w-full">
                         <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
                             <i class="ph ph-database text-blue-600"></i> Reference Data
+                            <!-- INFO BUTTON 1 (Header) -->
+                            <button onclick="toggleCurrencyHelp()" class="text-blue-400 hover:text-blue-600 transition bg-blue-50 rounded-full px-1.5 py-0.5 ml-2 border border-blue-100" title="Currency Logic Guide">
+                                <i class="ph ph-info-fill"></i> Help
+                            </button>
                         </h3>
                         <!-- DYNAMIC BUTTON: Loads based on currency -->
                         <button onclick="loadSampleRef()" class="text-[10px] bg-white border border-slate-300 px-2 py-1 rounded hover:bg-slate-50 text-slate-600 shadow-sm">Load Sample</button>
@@ -338,8 +360,12 @@
                     
                     <!-- BASE CURRENCY SELECTOR -->
                     <div class="flex items-center justify-between bg-slate-50 p-2 rounded border border-slate-200">
-                        <div class="text-[10px] text-slate-500">
-                            DSA Base Currency:
+                        <div class="flex items-center gap-1">
+                            <div class="text-[10px] text-slate-500">DSA Base Currency:</div>
+                            <!-- INFO BUTTON 2 (Inside Input Area) -->
+                            <button onclick="toggleCurrencyHelp()" class="text-blue-400 hover:text-blue-600 transition" title="Currency Logic Guide">
+                                <i class="ph ph-info-fill"></i>
+                            </button>
                         </div>
                         <select id="baseCurrency" onchange="updateRefHeaders()" class="text-xs border border-slate-300 rounded px-2 py-1 bg-white font-bold text-blue-700 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer">
                             <option value="TARGET" selected>Same as Target (IDR)</option>
@@ -470,6 +496,61 @@
         </section>
 
     </main>
+
+    <!-- 5. CURRENCY GUIDE MODAL (NEW) -->
+    <div id="currencyHelpModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleCurrencyHelp()"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center">
+                <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:w-full sm:max-w-lg border border-blue-100">
+                    <div class="bg-blue-50 px-6 py-4 border-b border-blue-100 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">
+                            <i class="ph ph-currency-circle-dollar text-blue-600"></i> Currency Logic Guide
+                        </h3>
+                        <button onclick="toggleCurrencyHelp()" class="text-blue-400 hover:text-blue-600 transition"><i class="ph ph-x text-xl"></i></button>
+                    </div>
+                    
+                    <div class="p-6 space-y-4">
+                        <p class="text-sm text-slate-600">
+                            This setting determines how the calculator interprets the "DSA Rate" column in your Reference Data.
+                        </p>
+
+                        <div class="grid grid-cols-1 gap-3">
+                            <!-- Scenario 1 -->
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                <h4 class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
+                                    <span class="bg-slate-200 px-2 rounded text-xs">Option A</span> Same as Target (e.g. IDR)
+                                </h4>
+                                <div class="text-xs text-slate-600 pl-2 border-l-2 border-slate-300 ml-1">
+                                    <p><strong>Use for:</strong> Local Staff / National Officers.</p>
+                                    <p class="mt-1"><strong>Logic:</strong> You enter DSA in Rupiah (e.g. 4,500,000). The system adds Terminal Fare (converted from USD) to this amount.</p>
+                                </div>
+                            </div>
+
+                            <!-- Scenario 2 -->
+                            <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                                <h4 class="text-sm font-bold text-blue-800 mb-1 flex items-center gap-2">
+                                    <span class="bg-blue-200 px-2 rounded text-xs text-blue-900">Option B</span> USD ($)
+                                </h4>
+                                <div class="text-xs text-slate-600 pl-2 border-l-2 border-blue-300 ml-1">
+                                    <p><strong>Use for:</strong> International Staff / Experts.</p>
+                                    <p class="mt-1"><strong>Logic:</strong> You enter DSA in USD (e.g. $400). The system calculates everything in USD first, then converts the Final Total to Target Currency using UNORE.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="text-xs text-slate-500 italic mt-2">
+                            * Tip: Terminal Fare (TF) is ALWAYS treated as USD input and converted automatically.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-slate-50 px-6 py-4 flex justify-end">
+                        <button type="button" onclick="toggleCurrencyHelp()" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">Got it</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- 4. MIXED CURRENCY MODAL -->
     <div id="mixedHelpModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
@@ -645,97 +726,6 @@
             initSlides();
         });
 
-        // --- 1. DYNAMIC SAMPLE DATA (NEW) ---
-        function loadSampleRef() {
-            const baseType = document.getElementById('baseCurrency').value;
-            let data = "";
-            
-            if (baseType === 'USD') {
-                // USD Context Samples
-                data = 
-`Paris\t400\t60\t70
-New York\t450\t65\t90
-Geneva\t380\t55\t60
-Nairobi\t250\t50\t47
-Bangkok\t210\t50\t47`;
-            } else {
-                // Local/Target Context Samples (e.g. IDR)
-                data = 
-`Jakarta\t4500000\t55\t47
-Bali\t3200000\t45\t47
-Bandung\t2800000\t40\t47
-Surabaya\t2500000\t40\t47
-Lombok\t3000000\t45\t47`;
-            }
-            document.getElementById('refInput').value = data;
-        }
-
-        // --- SMART DUMMY GENERATOR (NEW) ---
-        function loadSampleParticipants() {
-            // 1. Read Reference Data to get valid cities
-            const refText = document.getElementById('refInput').value;
-            const refLines = refText.trim().split('\n');
-            const validCities = [];
-            
-            refLines.forEach(line => {
-                const cols = line.split('\t');
-                if (cols.length > 0 && cols[0].trim() !== "") {
-                    validCities.push(cols[0].trim());
-                }
-            });
-
-            // Fallback if Ref Data is empty
-            if (validCities.length === 0) {
-                alert("Please load or enter Reference Data first!");
-                loadSampleRef(); // Auto load ref
-                return; // Let user click again to see effect or recall? Better to recurse once.
-                // Actually, let's just use default list if empty to prevent crash
-                validCities.push("Jakarta", "Bali");
-            }
-
-            // 2. Generate 10 Dummy Participants
-            const dummyNames = [
-                "Ahmad Fauzi", "Sarah Connor", "John Wick", "Ratna Sari", "Budi Doremi",
-                "Siti Nurhaliza", "Jean-Claude", "Fatima Ahmed", "Wei Chen", "Maria Garcia"
-            ];
-            
-            let participantData = "";
-            
-            for (let i = 0; i < 10; i++) {
-                const name = dummyNames[i % dummyNames.length];
-                // Pick random city from Valid Cities
-                const city = validCities[Math.floor(Math.random() * validCities.length)];
-                
-                // Random Days (3 to 7)
-                const days = Math.floor(Math.random() * 5) + 3;
-                
-                // Random Hotel (0 or Days or 'Y')
-                // Logic: 30% chance self-paid (0), 50% chance full (Y), 20% partial
-                const rHotel = Math.random();
-                let hotel = "0";
-                if (rHotel > 0.3) {
-                    if (rHotel > 0.8) hotel = Math.max(1, days - 1); // Partial
-                    else hotel = "Y"; // Full
-                }
-
-                // Random Meal (0, 2, Y)
-                const rMeal = Math.random();
-                let meal = "0";
-                if (rMeal > 0.4) {
-                    meal = Math.floor(Math.random() * (days + 1)); // Random 0 to Days
-                    if (meal === days) meal = "Y";
-                }
-
-                // Random Legs (0, 2, 4)
-                const legsOptions = [0, 2, 4, 4, 4]; // Weighted to 4
-                const legs = legsOptions[Math.floor(Math.random() * legsOptions.length)];
-
-                participantData += `${name}\t${city}\t${days}\t${hotel}\t${meal}\t${legs}\n`;
-            }
-
-            document.getElementById('partInput').value = participantData;
-        }
-
         function updateBaseCurrencyLabel() {
             const targetCurrency = document.getElementById('currencyCode').value;
             const baseSelect = document.getElementById('baseCurrency');
@@ -755,6 +745,7 @@ Lombok\t3000000\t45\t47`;
         function toggleFormatHelp() { document.getElementById('formatHelpModal').classList.toggle('hidden'); }
         function toggleEmailHelp() { document.getElementById('emailHelpModal').classList.toggle('hidden'); }
         function toggleMixedHelp() { document.getElementById('mixedHelpModal').classList.toggle('hidden'); }
+        function toggleCurrencyHelp() { document.getElementById('currencyHelpModal').classList.toggle('hidden'); } // Added Toggle Function
 
         // --- SLIDESHOW LOGIC ---
         let currentSlideIdx = 0;
@@ -826,6 +817,82 @@ Lombok\t3000000\t45\t47`;
         const container = document.getElementById('slider-container');
         container.addEventListener('mouseenter', () => { isPaused = true; document.getElementById('slider-container').classList.add('paused'); });
         container.addEventListener('mouseleave', () => { isPaused = false; document.getElementById('slider-container').classList.remove('paused'); resetProgressBar(); });
+
+        // --- SAMPLE DATA ---
+        function loadSampleRef() {
+            const baseType = document.getElementById('baseCurrency').value;
+            let data = "";
+            
+            if (baseType === 'USD') {
+                data = 
+`Paris\t400\t60\t70
+New York\t450\t65\t90
+Geneva\t380\t55\t60
+Nairobi\t250\t50\t47
+Bangkok\t210\t50\t47`;
+            } else {
+                data = 
+`Jakarta\t4500000\t55\t47
+Bali\t3200000\t45\t47
+Bandung\t2800000\t40\t47
+Surabaya\t2500000\t40\t47
+Lombok\t3000000\t45\t47`;
+            }
+            document.getElementById('refInput').value = data;
+        }
+
+        function loadSampleParticipants() {
+            // Read Ref Data
+            const refText = document.getElementById('refInput').value;
+            const refLines = refText.trim().split('\n');
+            const validCities = [];
+            
+            refLines.forEach(line => {
+                const cols = line.split('\t');
+                if (cols.length > 0 && cols[0].trim() !== "") {
+                    validCities.push(cols[0].trim());
+                }
+            });
+
+            if (validCities.length === 0) {
+                alert("Please load or enter Reference Data first!");
+                loadSampleRef(); 
+                return;
+            }
+
+            const dummyNames = [
+                "Ahmad Fauzi", "Sarah Connor", "John Wick", "Ratna Sari", "Budi Doremi",
+                "Siti Nurhaliza", "Jean-Claude", "Fatima Ahmed", "Wei Chen", "Maria Garcia"
+            ];
+            
+            let participantData = "";
+            
+            for (let i = 0; i < 10; i++) {
+                const name = dummyNames[i % dummyNames.length];
+                const city = validCities[Math.floor(Math.random() * validCities.length)];
+                const days = Math.floor(Math.random() * 5) + 3;
+                
+                const rHotel = Math.random();
+                let hotel = "0";
+                if (rHotel > 0.3) {
+                    if (rHotel > 0.8) hotel = Math.max(1, days - 1); 
+                    else hotel = "Y"; 
+                }
+
+                const rMeal = Math.random();
+                let meal = "0";
+                if (rMeal > 0.4) {
+                    meal = Math.floor(Math.random() * (days + 1)); 
+                    if (meal === days) meal = "Y";
+                }
+
+                const legsOptions = [0, 2, 4, 4, 4]; 
+                const legs = legsOptions[Math.floor(Math.random() * legsOptions.length)];
+
+                participantData += `${name}\t${city}\t${days}\t${hotel}\t${meal}\t${legs}\n`;
+            }
+            document.getElementById('partInput').value = participantData;
+        }
 
         // --- PARSERS & LOGIC ---
         function parseTSV(text) { return text.trim().split('\n').map(line => line.split('\t').map(cell => cell.trim())); }
@@ -998,7 +1065,7 @@ Lombok\t3000000\t45\t47`;
                 body += `${index + 1}. ${row.name} (${row.displayCity})\n   Days: ${row.days} | Net Base: ${row.netPayableBase.toFixed(2)} | TF: $${row.totalTF_USD}\n   Final: ${formatCurrency(row.finalTotal, currencyCode)}\n\n`;
             });
             if (calculatedData.length > maxRows) body += `... (and ${calculatedData.length - maxRows} more rows. Please see attached Excel)\n\n`;
-            body += `--------------------------------------------------\nGenerated by UN Travel Calculator Engine v3.6`;
+            body += `--------------------------------------------------\nGenerated by UN Travel Calculator Engine v3.9`;
             const subject = `[DSA Calc] ${missionName} - Summary`;
             toggleEmailHelp();
             window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;

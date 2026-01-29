@@ -83,10 +83,10 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
                     <i class="ph ph-airplane-tilt text-2xl text-blue-300"></i>
-                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v3.0</span></span>
+                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v3.2</span></span>
                 </div>
                 <div class="text-xs text-blue-200 hidden md:block text-right">
-                    Auto-Calculation Engine v3.0 (Clarified Logic)
+                    Auto-Calculation Engine v3.2 (Advisory)
                     <div class="font-semibold text-blue-100 mt-0.5">Angga Conni Saputra</div>
                 </div>
             </div>
@@ -103,9 +103,15 @@
                 <!-- Row 1: Core Financials -->
                 <div class="grid grid-cols-2 gap-4">
                     <div class="col-span-1">
-                        <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase">Currency & Rate</label>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase">Target Currency & UNORE</label>
+                            <!-- NEW: Mixed Currency Advisory -->
+                            <button onclick="toggleMixedHelp()" class="text-[9px] text-amber-600 hover:text-amber-800 font-bold bg-amber-50 px-2 py-0.5 rounded cursor-pointer border border-amber-200">
+                                ⚠️ Mixed Group?
+                            </button>
+                        </div>
                         <div class="flex gap-2 h-9">
-                            <select id="currencyCode" class="w-1/3 px-1 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-xs font-bold text-slate-700 bg-slate-50 cursor-pointer">
+                            <select id="currencyCode" onchange="updateBaseCurrencyLabel()" class="w-1/3 px-1 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-xs font-bold text-slate-700 bg-slate-50 cursor-pointer">
                                 <optgroup label="Default">
                                     <option value="IDR" selected>IDR 🇮🇩</option>
                                 </optgroup>
@@ -174,25 +180,24 @@
                 </div>
             </div>
 
-            <!-- Right Panel: Info Slideshow (Auto Rotating) -->
+            <!-- Right Panel: Info Slideshow -->
             <div id="slider-container" class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl border border-blue-100 md:col-span-2 flex flex-col justify-between relative overflow-hidden h-full group">
                 
-                <!-- STABILIZER WRAPPER (Min Height) -->
                 <div class="min-h-[180px] flex flex-col justify-center">
                     
-                    <!-- Slide 1: Quick Guide (UPDATED) -->
+                    <!-- Slide 1: Currency Logic -->
                     <div class="slide-content active-slide" id="slide-0">
                         <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                            <i class="ph ph-info text-blue-600"></i> New Feature: Deduction Inputs
+                            <i class="ph ph-currency-circle-dollar text-blue-600"></i> Dual Currency Logic
                         </h3>
                         <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                            <li><strong>Clarification:</strong> The columns "Hotel Days" and "Meal Days" are for <strong>DEDUCTIONS</strong>.</li>
-                            <li><strong>Input Rule:</strong> Enter the number of days where meals/hotel were provided <strong>FREE by Organizer</strong>.</li>
-                            <li>If participant pays themselves, type <strong>0</strong> (No deduction).</li>
+                            <li><strong>Local Base (IDR):</strong> For local staff paid in local currency.</li>
+                            <li><strong>USD Base ($):</strong> For international experts paid in USD.</li>
+                            <li><strong>Advice:</strong> Run separate calculations for each group.</li>
                         </ul>
                     </div>
 
-                    <!-- Slide 2: Calculation Logic (UPDATED) -->
+                    <!-- Slide 2: Deduction Logic -->
                     <div class="slide-content hidden-slide" id="slide-1">
                         <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
                             <i class="ph ph-function text-green-600"></i> Deduction Logic
@@ -211,7 +216,7 @@
                         </h3>
                         <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
                             <li><strong>Incidentals (15-20%)</strong> are the staff's minimum entitlement.</li>
-                            <li>If active, the system guarantees staff receive at least the Incidental portion even if deductions are high (Full Board).</li>
+                            <li>If active, the system guarantees staff receive at least the Incidental portion even if deductions are high.</li>
                         </ul>
                     </div>
 
@@ -252,7 +257,6 @@
                     </div>
 
                 </div>
-                <!-- END STABILIZER WRAPPER -->
 
                 <!-- Slider Controls -->
                 <div class="flex justify-between items-center mt-4 pt-4 border-t border-blue-100 z-10">
@@ -277,41 +281,52 @@
             
             <!-- REFERENCE DATA INPUT -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[450px]">
-                <div class="p-3 bg-slate-100 border-b border-slate-200 flex justify-between items-center">
-                    <div>
+                <div class="p-3 bg-slate-100 border-b border-slate-200 flex flex-col gap-2">
+                    <div class="flex justify-between items-center w-full">
                         <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
-                            <i class="ph ph-database text-blue-600"></i> Reference Data (ICSC)
+                            <i class="ph ph-database text-blue-600"></i> Reference Data
                         </h3>
-                        <p class="text-[10px] text-slate-500 mt-0.5">Copy from Excel (no header) & Paste below</p>
+                        <button onclick="loadSampleRef()" class="text-[10px] bg-white border border-slate-300 px-2 py-1 rounded hover:bg-slate-50 text-slate-600 shadow-sm">Load Sample</button>
                     </div>
-                    <button onclick="loadSampleRef()" class="text-[10px] bg-white border border-slate-300 px-2 py-1 rounded hover:bg-slate-50 text-slate-600 shadow-sm">Load Sample</button>
+                    
+                    <!-- BASE CURRENCY SELECTOR -->
+                    <div class="flex items-center justify-between bg-slate-50 p-2 rounded border border-slate-200">
+                        <div class="text-[10px] text-slate-500">
+                            DSA Base Currency:
+                        </div>
+                        <select id="baseCurrency" onchange="updateRefHeaders()" class="text-xs border border-slate-300 rounded px-2 py-1 bg-white font-bold text-blue-700 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer">
+                            <option value="TARGET" selected>Same as Target (IDR)</option>
+                            <option value="USD">USD ($)</option>
+                        </select>
+                    </div>
+                    <p class="text-[10px] text-slate-400">Copy from Excel (no header) & Paste below</p>
                 </div>
                 
                 <div class="excel-header" style="grid-template-columns: 2fr 1fr 1fr 1fr;">
                     <div class="excel-cell">City</div>
-                    <div class="excel-cell text-center">DSA ($)</div>
+                    <div class="excel-cell text-center" id="dsaRefHeader">DSA (IDR)</div>
                     <div class="excel-cell text-center">Room (%)</div>
                     <div class="excel-cell text-center">TF ($)</div>
                 </div>
 
                 <div class="relative flex-1 group">
-                    <textarea id="refInput" class="w-full h-full p-4 font-mono text-xs focus:outline-none resize-none bg-slate-50/30 group-hover:bg-white transition-colors" placeholder="Format example:&#10;Paris	400	60	70&#10;Jakarta	230	55	47&#10;... (Paste your data here)"></textarea>
+                    <textarea id="refInput" class="w-full h-full p-4 font-mono text-xs focus:outline-none resize-none bg-slate-50/30 group-hover:bg-white transition-colors" placeholder="Format example:&#10;Jakarta	4500000	55	47&#10;Bali	3200000	45	47&#10;... (Paste your data here)"></textarea>
                 </div>
             </div>
 
             <!-- PARTICIPANT DATA INPUT -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[450px]">
-                <div class="p-3 bg-slate-100 border-b border-slate-200 flex justify-between items-center">
+                <div class="p-3 bg-slate-100 border-b border-slate-200 flex justify-between items-center h-[92px]">
                     <div>
                         <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
                             <i class="ph ph-users text-green-600"></i> Participant Data
                             
-                            <!-- NEW INFO BUTTON -->
+                            <!-- INFO BUTTON -->
                             <button onclick="toggleFormatHelp()" class="ml-2 text-blue-500 hover:text-blue-700 transition" title="Click for Format Guide">
                                 <i class="ph ph-info text-lg bg-blue-50 rounded-full p-0.5"></i>
                             </button>
                         </h3>
-                        <p class="text-[10px] text-slate-500 mt-0.5">Paste from Excel (See <i class="ph ph-info inline"></i> for columns)</p>
+                        <p class="text-[10px] text-slate-500 mt-2">Paste from Excel (See <i class="ph ph-info inline"></i> for columns)</p>
                     </div>
                     <button onclick="loadSampleParticipants()" class="text-[10px] bg-white border border-slate-300 px-2 py-1 rounded hover:bg-slate-50 text-slate-600 shadow-sm">Load Sample</button>
                 </div>
@@ -331,7 +346,7 @@
             </div>
         </div>
 
-        <!-- Action Buttons (DUAL MODE) -->
+        <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row justify-center gap-4">
             <button onclick="processData(true)" class="group bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-3 transform hover:-translate-y-1">
                 <i class="ph ph-shield-check text-2xl group-hover:scale-110 transition-transform"></i>
@@ -369,7 +384,7 @@
                             <div class="text-xs text-slate-400">Total Payout (Est.)</div>
                             <div class="font-bold text-lg text-emerald-600" id="grandTotalDisplay">0</div>
                         </div>
-                        <!-- BUTTON GROUP: EMAIL & EXCEL -->
+                        <!-- BUTTON GROUP -->
                         <div class="flex gap-2">
                             <button onclick="toggleEmailHelp()" class="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition shadow-md" title="Email Summary">
                                 <i class="ph ph-paper-plane-tilt text-lg"></i>
@@ -388,15 +403,15 @@
                                 <th class="px-4 py-3">Name</th>
                                 <th class="px-4 py-3">City</th>
                                 <th class="px-4 py-3 text-center">Days</th>
-                                <th class="px-4 py-3 text-center">Base DSA</th>
-                                <th class="px-4 py-3 text-center text-purple-600 bg-purple-50">Incidental ($)</th>
+                                <th class="px-4 py-3 text-center" id="baseDsaHeader">Base DSA</th>
+                                <th class="px-4 py-3 text-center text-purple-600 bg-purple-50">Incidental</th>
                                 <th class="px-4 py-3 text-center bg-blue-50 text-blue-800">Hotel Days (Ded)</th>
                                 <th class="px-4 py-3 text-center bg-yellow-50 text-yellow-800">Meal Days (Ded)</th>
                                 <th class="px-4 py-3 text-right">Deductions</th>
-                                <th class="px-4 py-3 text-right font-bold text-blue-700">Net Payable ($)</th>
+                                <th class="px-4 py-3 text-right font-bold text-blue-700">Net Payable</th>
                                 <th class="px-4 py-3 text-right">TF ($)</th>
-                                <th class="px-4 py-3 text-right bg-gray-50">Total USD</th>
-                                <th class="px-4 py-3 text-right font-bold text-emerald-700" id="headerTotalLocal">Total (Local)</th>
+                                <th class="px-4 py-3 text-right bg-gray-50">Total (Base + TF)</th>
+                                <th class="px-4 py-3 text-right font-bold text-emerald-700" id="headerTotalLocal">Total (Final)</th>
                             </tr>
                         </thead>
                         <tbody id="resultBody" class="divide-y divide-slate-100">
@@ -409,12 +424,52 @@
 
     </main>
 
-    <!-- 1. EXCEL OPENING GUIDE MODAL -->
-    <div id="csvHelpModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Background backdrop -->
-        <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleCsvHelp()"></div>
+    <!-- 4. MIXED CURRENCY MODAL (NEW) -->
+    <div id="mixedHelpModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleMixedHelp()"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center">
+                <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:w-full sm:max-w-lg border border-amber-100">
+                    <div class="bg-amber-50 px-6 py-4 border-b border-amber-100 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-amber-900 flex items-center gap-2">
+                            <i class="ph ph-warning-circle text-amber-600"></i> Handling Mixed Currencies
+                        </h3>
+                        <button onclick="toggleMixedHelp()" class="text-amber-400 hover:text-amber-600 transition"><i class="ph ph-x text-xl"></i></button>
+                    </div>
+                    
+                    <div class="p-6 space-y-4">
+                        <p class="text-sm text-slate-600">
+                            Do you have participants paid in <strong>IDR (Locals)</strong> and <strong>USD (Internationals)</strong> in the same event?
+                        </p>
 
-        <!-- Modal panel -->
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <h4 class="text-sm font-bold text-slate-800 mb-2">💡 Best Practice Strategy</h4>
+                            <p class="text-xs text-slate-600 mb-2">
+                                Finance rules usually require separate payment batches. Please <strong>do not mix them</strong> in one calculation.
+                            </p>
+                            <ol class="list-decimal list-inside text-xs text-slate-700 space-y-2 font-medium">
+                                <li><strong>Run Batch 1 (Locals):</strong> Select "Same as Target (IDR)" in Base Currency. Paste only local staff data. Export Report.</li>
+                                <li><strong>Run Batch 2 (Internationals):</strong> Change Base Currency to "USD". Paste international staff data. Export Report.</li>
+                            </ol>
+                        </div>
+                        
+                        <p class="text-xs text-slate-500 italic">
+                            * Mixing currencies in one table makes the "Grand Total" mathematically invalid and may be rejected by Audit.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-slate-50 px-6 py-4 flex justify-end">
+                        <button type="button" onclick="toggleMixedHelp()" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">Understood</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTHER MODALS (CSV, FORMAT, EMAIL) -->
+    <!-- CSV HELP -->
+    <div id="csvHelpModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleCsvHelp()"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
                 <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
@@ -426,67 +481,46 @@
                             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
                                 <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Excel File Opening Guide</h3>
                                 <div class="mt-2">
-                                    <p class="text-sm text-gray-500 mb-4">
-                                        Since this file is generated using lightweight web technology (no server), Excel will show standard security warnings. This is normal and safe.
-                                    </p>
-                                    
+                                    <p class="text-sm text-gray-500 mb-4">Since this file is generated using lightweight web technology, Excel will show standard security warnings.</p>
                                     <div class="bg-yellow-50 p-3 rounded-md border border-yellow-200 mb-3">
-                                        <h4 class="text-sm font-bold text-yellow-800 flex items-center gap-2">
-                                            <i class="ph ph-warning-circle"></i> 1. Format Warning Appears
-                                        </h4>
-                                        <p class="text-xs text-slate-600 mt-1">
-                                            Excel will show: <em>"The file format and extension don't match..."</em>
-                                        </p>
-                                        <p class="text-xs font-semibold text-slate-800 mt-1">
-                                            ✅ Solution: Click "YES".
-                                        </p>
+                                        <h4 class="text-sm font-bold text-yellow-800"><i class="ph ph-warning-circle"></i> 1. Format Warning</h4>
+                                        <p class="text-xs text-slate-600 mt-1">Click <strong>"YES"</strong> when asked about file format.</p>
                                     </div>
-
                                     <div class="bg-blue-50 p-3 rounded-md border border-blue-200">
-                                        <h4 class="text-sm font-bold text-blue-800 flex items-center gap-2">
-                                            <i class="ph ph-shield-check"></i> 2. Blank Screen / Protected View
-                                        </h4>
-                                        <p class="text-xs text-slate-600 mt-1">
-                                            If the screen looks blank or gray, Excel is in "Protected View".
-                                        </p>
-                                        <p class="text-xs font-semibold text-slate-800 mt-1">
-                                            ✅ Solution: Click "Enable Editing" in the yellow top bar.
-                                        </p>
+                                        <h4 class="text-sm font-bold text-blue-800"><i class="ph ph-shield-check"></i> 2. Protected View</h4>
+                                        <p class="text-xs text-slate-600 mt-1">Click <strong>"Enable Editing"</strong> in the yellow bar.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                        <button type="button" onclick="toggleCsvHelp()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Got it, Close</button>
+                        <button type="button" onclick="toggleCsvHelp()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Got it</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 2. DATA FORMAT GUIDE MODAL (REVISED v3.0) -->
+    <!-- FORMAT HELP -->
     <div id="formatHelpModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleFormatHelp()"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4 text-center">
                 <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:w-full sm:max-w-2xl border border-slate-100">
                     <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                            <i class="ph ph-table text-blue-600"></i> Excel Data Format Guide
-                        </h3>
+                        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-table text-blue-600"></i> Excel Data Format Guide</h3>
                         <button onclick="toggleFormatHelp()" class="text-slate-400 hover:text-slate-600 transition"><i class="ph ph-x text-xl"></i></button>
                     </div>
-                    
                     <div class="p-6 space-y-6">
                         <div>
-                            <h4 class="text-sm font-semibold text-slate-700 mb-2">Required Column Order (Left to Right):</h4>
+                            <h4 class="text-sm font-semibold text-slate-700 mb-2">Required Column Order:</h4>
                             <div class="flex text-xs font-mono border border-slate-300 rounded overflow-hidden">
-                                <div class="bg-slate-100 p-2 border-r border-slate-200 w-1/6">1.Name</div>
-                                <div class="bg-slate-100 p-2 border-r border-slate-200 w-1/6">2.City</div>
-                                <div class="bg-slate-100 p-2 border-r border-slate-200 w-1/12 text-center">3.Days</div>
-                                <div class="bg-blue-50 p-2 border-r border-blue-200 w-1/6 text-blue-800 font-bold text-center">4.Hotel Days</div>
-                                <div class="bg-yellow-50 p-2 border-r border-yellow-200 w-1/6 text-yellow-800 font-bold text-center">5.Meal Days</div>
+                                <div class="bg-slate-100 p-2 border-r w-1/6">1.Name</div>
+                                <div class="bg-slate-100 p-2 border-r w-1/6">2.City</div>
+                                <div class="bg-slate-100 p-2 border-r w-1/12 text-center">3.Days</div>
+                                <div class="bg-blue-50 p-2 border-r w-1/6 text-blue-800 font-bold text-center">4.Hotel Days</div>
+                                <div class="bg-yellow-50 p-2 border-r w-1/6 text-yellow-800 font-bold text-center">5.Meal Days</div>
                                 <div class="bg-slate-100 p-2 w-1/12 text-center">6.Legs</div>
                             </div>
                         </div>
@@ -494,25 +528,21 @@
                             <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
                                 <div class="font-bold text-blue-800 text-sm mb-1">Column 4: Hotel Days</div>
                                 <ul class="list-disc list-inside text-xs text-slate-600 space-y-2">
-                                    <li>Type <strong>Number</strong> (e.g., <code>3</code>) = Accommodation provided <strong>FREE by organizer</strong> for 3 days (Deduction applies).</li>
-                                    <li>Type <strong>'Y'</strong> or <strong>'Yes'</strong> = Provided FREE for ALL days.</li>
-                                    <li>Type <strong>'N'</strong>, <strong>'0'</strong>, or blank = <strong>Self-paid</strong> (No deduction).</li>
+                                    <li>Type <strong>Number</strong> (e.g., 3) = Free hotel for 3 days.</li>
+                                    <li>Type <strong>'Y'</strong> = Free hotel for ALL days.</li>
+                                    <li>Type <strong>'0'</strong> = Self-paid (No deduction).</li>
                                 </ul>
                             </div>
                             <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
                                 <div class="font-bold text-yellow-800 text-sm mb-1">Column 5: Meal Days</div>
                                 <ul class="list-disc list-inside text-xs text-slate-600 space-y-2">
-                                    <li>Type <strong>Number</strong> (e.g., <code>2</code>) = Meals provided <strong>FREE by organizer</strong> for 2 days (Deduction applies).</li>
-                                    <li>Type <strong>'Y'</strong> or <strong>'Yes'</strong> = Provided FREE for ALL days.</li>
-                                    <li>Type <strong>'N'</strong> or <strong>'0'</strong> = <strong>Self-paid</strong> (No deduction).</li>
+                                    <li>Type <strong>Number</strong> (e.g., 2) = Free meals for 2 days.</li>
+                                    <li>Type <strong>'Y'</strong> = Free meals for ALL days.</li>
+                                    <li>Type <strong>'0'</strong> = Self-paid (No deduction).</li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="text-xs text-slate-500 italic bg-slate-50 p-2 rounded">
-                            * Tip: Copy your data from Excel (exclude headers) and paste it into the "Participant Data" box.
-                        </div>
                     </div>
-                    
                     <div class="bg-slate-50 px-6 py-3 flex justify-end">
                         <button type="button" onclick="toggleFormatHelp()" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">Close Guide</button>
                     </div>
@@ -521,51 +551,26 @@
         </div>
     </div>
 
-    <!-- 3. EMAIL GUIDE MODAL (NEW) -->
+    <!-- EMAIL HELP -->
     <div id="emailHelpModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleEmailHelp()"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4 text-center">
                 <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:w-full sm:max-w-xl border border-slate-100">
                     <div class="bg-indigo-50 px-6 py-4 border-b border-indigo-100 flex justify-between items-center">
-                        <h3 class="text-lg font-bold text-indigo-900 flex items-center gap-2">
-                            <i class="ph ph-paper-plane-tilt text-indigo-600"></i> Email Reporting Guide
-                        </h3>
+                        <h3 class="text-lg font-bold text-indigo-900 flex items-center gap-2"><i class="ph ph-paper-plane-tilt text-indigo-600"></i> Email Reporting Guide</h3>
                         <button onclick="toggleEmailHelp()" class="text-indigo-400 hover:text-indigo-600 transition"><i class="ph ph-x text-xl"></i></button>
                     </div>
-                    
                     <div class="p-6 space-y-4">
-                        <p class="text-sm text-slate-600">
-                            This feature helps you quickly send a summary of the calculation to the finance team or yourself using your default email application.
-                        </p>
-
-                        <!-- How it works -->
-                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                            <h4 class="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2"><i class="ph ph-gear text-slate-500"></i> How it Works</h4>
-                            <p class="text-xs text-slate-600">
-                                When you click <strong>"Launch Mail App"</strong>, the browser will open your computer's default email client (Outlook, Mail, Gmail, etc.) with the <strong>Subject</strong> and <strong>Body</strong> pre-filled with the mission summary.
-                            </p>
-                        </div>
-
-                        <!-- Audit Trail -->
+                        <p class="text-sm text-slate-600">This feature helps you quickly send a summary of the calculation via your default email app.</p>
                         <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
                             <h4 class="text-sm font-bold text-emerald-800 mb-2 flex items-center gap-2"><i class="ph ph-shield-check text-emerald-600"></i> Audit Trail</h4>
-                            <p class="text-xs text-slate-600">
-                                If a participant visits multiple locations (multiple rows in data), each entry will be listed separately in the email body, providing a clear audit trail for every leg of the journey.
-                            </p>
-                        </div>
-
-                        <!-- Troubleshooting -->
-                        <div class="text-xs text-slate-500 italic mt-2 border-t border-slate-100 pt-2">
-                            * Note: If the button doesn't respond, ensure a default email application is configured on your device. For large datasets (>50 rows), please use "Export Excel" instead.
+                            <p class="text-xs text-slate-600">Each entry is listed separately in the email body, providing a clear audit trail.</p>
                         </div>
                     </div>
-                    
                     <div class="bg-slate-50 px-6 py-4 flex justify-between items-center">
                         <button type="button" onclick="toggleEmailHelp()" class="text-slate-500 hover:text-slate-700 text-sm font-medium transition">Close</button>
-                        <button type="button" onclick="executeMailTo()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-md flex items-center gap-2">
-                            Launch Mail App <i class="ph ph-arrow-right"></i>
-                        </button>
+                        <button type="button" onclick="executeMailTo()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-md flex items-center gap-2">Launch Mail App <i class="ph ph-arrow-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -574,29 +579,33 @@
 
     <!-- JS Logic -->
     <script>
-        // Set Default Date to Today
         window.addEventListener('load', () => {
             document.getElementById('reportDate').valueAsDate = new Date();
+            updateBaseCurrencyLabel();
             initSlides();
         });
 
-        // --- 0. MODAL LOGIC ---
-        function toggleCsvHelp() {
-            const modal = document.getElementById('csvHelpModal');
-            modal.classList.toggle('hidden');
+        function updateBaseCurrencyLabel() {
+            const targetCurrency = document.getElementById('currencyCode').value;
+            const baseSelect = document.getElementById('baseCurrency');
+            baseSelect.options[0].text = `Same as Target (${targetCurrency})`;
+            updateRefHeaders();
         }
 
-        function toggleFormatHelp() {
-            const modal = document.getElementById('formatHelpModal');
-            modal.classList.toggle('hidden');
+        function updateRefHeaders() {
+            const targetCurrency = document.getElementById('currencyCode').value;
+            const baseType = document.getElementById('baseCurrency').value;
+            const header = document.getElementById('dsaRefHeader');
+            if (baseType === 'USD') header.innerText = 'DSA ($)';
+            else header.innerText = `DSA (${targetCurrency})`;
         }
 
-        function toggleEmailHelp() {
-            const modal = document.getElementById('emailHelpModal');
-            modal.classList.toggle('hidden');
-        }
+        function toggleCsvHelp() { document.getElementById('csvHelpModal').classList.toggle('hidden'); }
+        function toggleFormatHelp() { document.getElementById('formatHelpModal').classList.toggle('hidden'); }
+        function toggleEmailHelp() { document.getElementById('emailHelpModal').classList.toggle('hidden'); }
+        function toggleMixedHelp() { document.getElementById('mixedHelpModal').classList.toggle('hidden'); }
 
-        // --- 1. SLIDESHOW LOGIC ---
+        // --- SLIDESHOW LOGIC ---
         let currentSlideIdx = 0;
         const totalSlides = 6; 
         let slideInterval;
@@ -643,31 +652,15 @@
             resetProgressBar();
         }
 
-        function nextSlide() {
-            currentSlideIdx = (currentSlideIdx + 1) % totalSlides;
-            updateSlides();
-        }
-
-        function prevSlide() {
-            currentSlideIdx = (currentSlideIdx - 1 + totalSlides) % totalSlides;
-            updateSlides();
-        }
-
-        function setSlide(n) {
-            currentSlideIdx = n;
-            updateSlides();
-        }
+        function nextSlide() { currentSlideIdx = (currentSlideIdx + 1) % totalSlides; updateSlides(); }
+        function prevSlide() { currentSlideIdx = (currentSlideIdx - 1 + totalSlides) % totalSlides; updateSlides(); }
+        function setSlide(n) { currentSlideIdx = n; updateSlides(); }
 
         function startSlideShow() {
             const bar = document.getElementById('progress-fill');
             bar.style.width = '0%';
             setTimeout(() => { bar.style.width = '100%'; }, 50);
-
-            slideInterval = setInterval(() => {
-                if(!isPaused) {
-                    nextSlide();
-                }
-            }, 3000);
+            slideInterval = setInterval(() => { if(!isPaused) nextSlide(); }, 3000);
         }
 
         function resetProgressBar() {
@@ -675,41 +668,21 @@
             bar.classList.remove('progress-fill');
             void bar.offsetWidth;
             bar.classList.add('progress-fill');
-            
-            if(!isPaused) {
-                bar.style.width = '100%';
-            } else {
-                bar.style.width = '0%';
-                if(!isPaused) setTimeout(() => { bar.style.width = '100%'; }, 50);
-            }
+            if(!isPaused) bar.style.width = '100%';
+            else { bar.style.width = '0%'; if(!isPaused) setTimeout(() => { bar.style.width = '100%'; }, 50); }
         }
 
         const container = document.getElementById('slider-container');
-        container.addEventListener('mouseenter', () => {
-            isPaused = true;
-            document.getElementById('slider-container').classList.add('paused');
-        });
-        container.addEventListener('mouseleave', () => {
-            isPaused = false;
-            document.getElementById('slider-container').classList.remove('paused');
-            resetProgressBar(); 
-        });
+        container.addEventListener('mouseenter', () => { isPaused = true; document.getElementById('slider-container').classList.add('paused'); });
+        container.addEventListener('mouseleave', () => { isPaused = false; document.getElementById('slider-container').classList.remove('paused'); resetProgressBar(); });
 
-
-        // --- 1. SAMPLE DATA ---
+        // --- SAMPLE DATA ---
         function loadSampleRef() {
             const data = 
-`Paris\t400\t60\t70
-Jakarta\t238\t55\t47
-Bali\t190\t45\t47
-New York\t450\t65\t90
-Bangkok\t210\t50\t47
-Dili\t185\t40\t47
-Geneva\t380\t55\t60
-Nairobi\t250\t50\t47
-Addis Ababa\t220\t45\t47
-Beirut\t280\t50\t47
-Santiago\t240\t50\t47`;
+`Jakarta\t4500000\t55\t47
+Bali\t3200000\t45\t47
+Paris\t400\t60\t70
+New York\t450\t65\t90`;
             document.getElementById('refInput').value = data;
         }
 
@@ -718,36 +691,12 @@ Santiago\t240\t50\t47`;
 `Ahmad Fauzi\tParis\t5\t5\t2\t4
 Sarah Connor\tJakarta\t3\t0\t0\t0
 John Wick\tNew York\t4\t4\t4\t4
-Ratna Sari\tBali\t3\tY\t1\t4
-Budi Doremi\tDili\t10\tY\t10\t2
-Siti Nurhaliza\tBangkok\t4\tN\t0\t4
-Jean-Claude\tGeneva\t5\tY\t3\t4
-Fatima Ahmed\tNairobi\t6\tY\t6\t4
-Wei Chen\tNew York\t5\tN\t0\t4
-Maria Garcia\tSantiago\t4\tY\t2\t4
-Yuki Tanaka\tJakarta\t3\tY\t3\t4
-Rahul Sharma\tBangkok\t5\tY\t0\t4
-Ahmed Al-Mansour\tBeirut\t4\tY\t4\t4
-Elena Popov\tGeneva\t3\tN\t0\t4
-Samuel Eto'o\tAddis Ababa\t5\tY\t5\t4
-Chantal Biya\tParis\t4\tY\t2\t4
-Bambang Pamungkas\tJakarta\t2\tY\t2\t0
-Cinta Laura\tNew York\t7\tN\t0\t4
-Deddy Corbuzier\tParis\t5\tY\t5\t4
-Raffi Ahmad\tBali\t3\tY\t3\t4
-Nagita Slavina\tBali\t3\tY\t3\t4
-Joko Anwar\tDili\t6\tN\t0\t4
-Sri Mulyani\tNew York\t5\tY\t5\t4
-Reza Rahadian\tParis\t6\tY\t6\t4
-Angga Conni Saputra\tParis\t7\tY\t7\t4`;
+Ratna Sari\tBali\t3\tY\t1\t4`;
             document.getElementById('partInput').value = data;
         }
 
-        // --- 2. UTILS ---
-        function parseTSV(text) {
-            return text.trim().split('\n').map(line => line.split('\t').map(cell => cell.trim()));
-        }
-
+        // --- PARSERS & LOGIC ---
+        function parseTSV(text) { return text.trim().split('\n').map(line => line.split('\t').map(cell => cell.trim())); }
         function parseDaysInput(val, totalDays) {
             if (!val) return 0;
             if (!isNaN(val)) return parseFloat(val);
@@ -755,36 +704,28 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
             if (val === 'y' || val === 'yes' || val === 'ya' || val === 'true') return totalDays;
             return 0; 
         }
-
         function parseLegs(val) {
             if (val === '' || val === undefined) return 4; 
             if (!isNaN(val)) return parseFloat(val);
             return 4;
         }
-
         function formatCurrency(num, currency = 'USD') {
-            return new Intl.NumberFormat('en-US', { 
-                style: 'currency', 
-                currency: currency,
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 2
-            }).format(num);
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency, minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(num);
         }
 
-        // --- 3. CORE LOGIC ---
         let calculatedData = [];
         let globalFloorRuleActive = true; 
 
         function processData(useFloorRule = true) {
             globalFloorRuleActive = useFloorRule; 
             const unore = parseFloat(document.getElementById('unoreRate').value) || 15400;
-            const currencyCode = document.getElementById('currencyCode').value; 
+            const targetCurrency = document.getElementById('currencyCode').value; 
+            const baseType = document.getElementById('baseCurrency').value;
             const mealPercent = parseFloat(document.getElementById('mealDedRate').value) || 30;
             const incidentalPercent = parseFloat(document.getElementById('incidentalRate').value) || 20;
 
             const refRaw = document.getElementById('refInput').value;
             const refLines = parseTSV(refRaw);
-            
             const cityMap = {};
             refLines.forEach(line => {
                 if(line.length >= 2) {
@@ -799,15 +740,17 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
 
             const partRaw = document.getElementById('partInput').value;
             const partLines = parseTSV(partRaw);
-
             calculatedData = [];
-            let totalGrandLocal = 0; 
+            let totalGrandFinal = 0; 
 
             const tbody = document.getElementById('resultBody');
             tbody.innerHTML = '';
             
-            const headerLocal = document.getElementById('headerTotalLocal');
-            if(headerLocal) headerLocal.innerText = `Total (${currencyCode})`;
+            const headerBase = document.getElementById('baseDsaHeader');
+            const headerFinal = document.getElementById('headerTotalLocal');
+            if(baseType === 'USD') headerBase.innerText = 'Base DSA ($)';
+            else headerBase.innerText = `Base DSA (${targetCurrency})`;
+            headerFinal.innerText = `Total (${targetCurrency})`;
 
             const badge = document.getElementById('modeBadge');
             if(useFloorRule) {
@@ -820,242 +763,140 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
 
             partLines.forEach(person => {
                 if(person.length < 2) return;
-
                 const name = person[0];
                 const cityKey = person[1].toLowerCase();
                 const displayCity = person[1];
                 const days = parseFloat(person[2]) || 0;
-                
                 const hotelDaysInput = person[3]; 
                 const mealDaysInput = person[4]; 
                 const legsInput = person[5];
-
                 const actualHotelDays = parseDaysInput(hotelDaysInput, days);
                 const actualMealDays = parseDaysInput(mealDaysInput, days);
                 const actualLegs = parseLegs(legsInput);
-
                 const ref = cityMap[cityKey];
                 
                 if (!ref) {
                     const tr = document.createElement('tr');
                     tr.className = "bg-red-50 text-red-600";
-                    tr.innerHTML = `<td colspan="12" class="px-6 py-4">Error: City <strong>${displayCity}</strong> not found. Please update Reference Data.</td>`;
+                    tr.innerHTML = `<td colspan="12" class="px-6 py-4">Error: City <strong>${displayCity}</strong> not found.</td>`;
                     tbody.appendChild(tr);
                     return;
                 }
 
-                // CALC
-                const totalIncidental = (ref.dsa * (incidentalPercent / 100)) * days;
-                
-                const totalRoomDeduction = (ref.dsa * (ref.roomPct / 100)) * actualHotelDays;
-                const totalMealDeduction = (ref.dsa * (mealPercent / 100)) * actualMealDays;
+                const dsaBaseVal = ref.dsa;
+                const totalIncidental = (dsaBaseVal * (incidentalPercent / 100)) * days;
+                const totalRoomDeduction = (dsaBaseVal * (ref.roomPct / 100)) * actualHotelDays;
+                const totalMealDeduction = (dsaBaseVal * (mealPercent / 100)) * actualMealDays;
                 const totalDeductions = totalRoomDeduction + totalMealDeduction;
-
-                const grossDSA = ref.dsa * days;
-                let netPayable = grossDSA - totalDeductions;
+                const grossDSA = dsaBaseVal * days;
+                let netPayableBase = grossDSA - totalDeductions;
 
                 let isFloorRuleApplied = false;
                 if (useFloorRule) {
-                    if (netPayable < totalIncidental) {
-                        netPayable = totalIncidental;
+                    if (netPayableBase < totalIncidental) {
+                        netPayableBase = totalIncidental;
                         isFloorRuleApplied = true;
                     }
                 }
-                if (netPayable < 0) netPayable = 0;
+                if (netPayableBase < 0) netPayableBase = 0;
 
-                const totalTF = ref.tf * actualLegs;
-                const totalUSD = netPayable + totalTF;
-                const totalLocal = totalUSD * unore;
+                const tfInUSD = ref.tf * actualLegs;
+                let finalTotal = 0;
+                let totalUSD_Display = 0;
 
-                totalGrandLocal += totalLocal;
+                if (baseType === 'USD') {
+                    const totalDsaAndTf_USD = netPayableBase + tfInUSD;
+                    totalUSD_Display = totalDsaAndTf_USD;
+                    if (targetCurrency === 'USD') finalTotal = totalDsaAndTf_USD;
+                    else finalTotal = totalDsaAndTf_USD * unore;
+                } else {
+                    const tfInTarget = tfInUSD * unore;
+                    finalTotal = netPayableBase + tfInTarget;
+                    totalUSD_Display = 0;
+                }
+
+                totalGrandFinal += finalTotal;
 
                 calculatedData.push({
-                    name, displayCity, days, 
-                    dsaBase: ref.dsa, 
-                    incidentalVal: (ref.dsa * (incidentalPercent/100)),
-                    totalIncidental,
-                    deductions: totalDeductions,
-                    netPayable, 
-                    totalTF, totalUSD, totalLocal,
+                    name, displayCity, days, dsaBase: dsaBaseVal, 
+                    incidentalVal: (dsaBaseVal * (incidentalPercent/100)),
+                    totalIncidental, deductions: totalDeductions, netPayableBase, 
+                    totalTF_USD: tfInUSD, finalTotal, baseType, targetCurrency,
                     actualHotelDays, actualMealDays, actualLegs
                 });
 
+                let baseSymbol = baseType === 'USD' ? '$' : '';
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
                 tr.innerHTML = `
                     <td class="px-4 py-3 font-medium text-slate-900">${name}</td>
                     <td class="px-4 py-3">${displayCity}</td>
                     <td class="px-4 py-3 text-center"><span class="bg-slate-100 text-slate-600 py-0.5 px-2 rounded text-xs font-bold">${days}</span></td>
-                    <td class="px-4 py-3 text-center text-slate-500">$${ref.dsa}</td>
-                    <td class="px-4 py-3 text-center bg-purple-50 text-purple-700 font-medium text-xs">$${(ref.dsa * incidentalPercent/100).toFixed(2)}<br><span class="text-[9px] text-purple-400">/day</span></td>
+                    <td class="px-4 py-3 text-center text-slate-500">${baseSymbol}${dsaBaseVal.toLocaleString()}</td>
+                    <td class="px-4 py-3 text-center bg-purple-50 text-purple-700 font-medium text-xs">${baseSymbol}${(dsaBaseVal * incidentalPercent/100).toFixed(2)}</td>
                     <td class="px-4 py-3 text-center font-bold text-blue-700 bg-blue-50 text-xs">${actualHotelDays} <span class="text-[9px] font-normal text-blue-600">days</span></td>
                     <td class="px-4 py-3 text-center font-bold text-yellow-700 bg-yellow-50 text-xs">${actualMealDays} <span class="text-[9px] font-normal text-yellow-600">days</span></td>
-                    <td class="px-4 py-3 text-right text-red-500 text-xs">
-                        -${totalDeductions.toFixed(2)}
-                    </td>
-                    <td class="px-4 py-3 text-right font-mono text-blue-600 font-bold">
-                        $${netPayable.toFixed(2)}
-                        ${isFloorRuleApplied ? '<br><span class="text-[9px] text-orange-500 bg-orange-50 px-1 rounded border border-orange-100">Floor Rule</span>' : ''}
-                    </td>
-                    <td class="px-4 py-3 text-right text-slate-500 text-xs">
-                        $${totalTF}
-                        <br><span class="text-[9px] text-slate-400">(${actualLegs} legs)</span>
-                    </td>
-                    <td class="px-4 py-3 text-right font-bold text-slate-700">$${totalUSD.toFixed(2)}</td>
-                    <td class="px-4 py-3 text-right font-bold text-emerald-600 text-xs">${formatCurrency(totalLocal, currencyCode)}</td>
+                    <td class="px-4 py-3 text-right text-red-500 text-xs">-${baseSymbol}${totalDeductions.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-right font-mono text-blue-600 font-bold">${baseSymbol}${netPayableBase.toFixed(2)}${isFloorRuleApplied ? '<br><span class="text-[9px] text-orange-500 bg-orange-50 px-1 rounded border border-orange-100">Floor Rule</span>' : ''}</td>
+                    <td class="px-4 py-3 text-right text-slate-500 text-xs">$${tfInUSD}<br><span class="text-[9px] text-slate-400">(${actualLegs} legs)</span></td>
+                    <td class="px-4 py-3 text-right bg-gray-50 text-xs text-slate-500">${baseType === 'USD' ? '$' + totalUSD_Display.toFixed(2) : '-'}</td>
+                    <td class="px-4 py-3 text-right font-bold text-emerald-600 text-xs">${formatCurrency(finalTotal, targetCurrency)}</td>
                 `;
                 tbody.appendChild(tr);
             });
 
-            document.getElementById('grandTotalDisplay').innerText = formatCurrency(totalGrandLocal, currencyCode);
+            document.getElementById('grandTotalDisplay').innerText = formatCurrency(totalGrandFinal, targetCurrency);
             document.getElementById('resultSection').classList.remove('hidden');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // --- 4. SEND EMAIL (FIXED) ---
         function executeMailTo() {
-            // Re-check calculation first
-            if (calculatedData.length === 0) {
-                alert("Please calculate data first!");
-                return;
-            }
-
+            if (calculatedData.length === 0) { alert("Please calculate data first!"); return; }
             const recipient = document.getElementById('recipientEmail').value || "";
             const missionName = document.getElementById('missionName').value || "UN Travel Audit";
             const reportDate = document.getElementById('reportDate').value;
-            const currencyCode = document.getElementById('currencyCode').value;
             const grandTotal = document.getElementById('grandTotalDisplay').innerText;
-
-            let body = `Dear Finance/Admin,\n\nHere is the DSA calculation summary for:\n`;
-            body += `Mission: ${missionName}\n`;
-            body += `Date: ${reportDate}\n`;
-            body += `Total Estimate: ${grandTotal}\n`;
-            body += `--------------------------------------------------\n\n`;
-            
-            // Limit rows to avoid URL length issues (simple safeguard)
+            const currencyCode = calculatedData[0].targetCurrency;
+            let body = `Dear Finance/Admin,\n\nHere is the DSA calculation summary for:\nMission: ${missionName}\nDate: ${reportDate}\nTotal Estimate: ${grandTotal}\n--------------------------------------------------\n\n`;
             const maxRows = 30;
             const dataToSend = calculatedData.slice(0, maxRows);
-            
             dataToSend.forEach((row, index) => {
-                body += `${index + 1}. ${row.name} (${row.displayCity})\n`;
-                body += `   Days: ${row.days} | Net DSA: $${row.netPayable.toFixed(2)} | TF: $${row.totalTF}\n`;
-                body += `   Total: ${formatCurrency(row.totalLocal, currencyCode)}\n\n`;
+                body += `${index + 1}. ${row.name} (${row.displayCity})\n   Days: ${row.days} | Net Base: ${row.netPayableBase.toFixed(2)} | TF: $${row.totalTF_USD}\n   Final: ${formatCurrency(row.finalTotal, currencyCode)}\n\n`;
             });
-
-            if (calculatedData.length > maxRows) {
-                body += `... (and ${calculatedData.length - maxRows} more rows. Please see attached Excel)\n\n`;
-            }
-
-            body += `--------------------------------------------------\n`;
-            body += `Generated by UN Travel Calculator Engine v2.9`;
-
+            if (calculatedData.length > maxRows) body += `... (and ${calculatedData.length - maxRows} more rows. Please see attached Excel)\n\n`;
+            body += `--------------------------------------------------\nGenerated by UN Travel Calculator Engine v3.2`;
             const subject = `[DSA Calc] ${missionName} - Summary`;
-            
-            // Close modal then open mail
             toggleEmailHelp();
             window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         }
 
-        // --- 5. EXPORT EXCEL ---
         function exportToExcelWithFormulas() {
-            if (calculatedData.length === 0) {
-                alert("Please calculate data first!");
-                return;
-            }
-
+            if (calculatedData.length === 0) { alert("Please calculate data first!"); return; }
             const unore = parseFloat(document.getElementById('unoreRate').value) || 15400;
             const currencyCode = document.getElementById('currencyCode').value;
             const incidentalPercent = parseFloat(document.getElementById('incidentalRate').value) || 20;
-            
-            // GET METADATA
             const missionName = document.getElementById('missionName').value || "UN Travel Audit Report";
             const reportDate = document.getElementById('reportDate').value;
+            const baseType = document.getElementById('baseCurrency').value;
 
-            // Define Table Header
             let table = `
             <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-            <head>
-                <!--[if gte mso 9]>
-                <xml>
-                <x:ExcelWorkbook>
-                <x:ExcelWorksheets>
-                <x:ExcelWorksheet>
-                <x:Name>Sheet1</x:Name>
-                <x:WorksheetOptions>
-                <x:DisplayGridlines/>
-                </x:WorksheetOptions>
-                </x:ExcelWorksheet>
-                </x:ExcelWorksheets>
-                </x:ExcelWorkbook>
-                </xml>
-                <![endif]-->
-                <style>
-                    th { font-weight: bold; background-color: #f3f4f6; border: 1px solid #d1d5db; }
-                    td { border: 1px solid #d1d5db; vertical-align: middle; }
-                    .header-title { font-size: 14pt; font-weight: bold; text-align: left; border: none; }
-                    .header-meta { font-size: 10pt; font-style: italic; text-align: left; border: none; }
-                </style>
-            </head>
-            <body>
-            <table>
-            <tr><td colspan="13" class="header-title">${missionName}</td></tr>
-            <tr><td colspan="13" class="header-meta">Generated Date: ${reportDate} | UNORE: ${unore} | Currency: ${currencyCode}</td></tr>
-            <tr></tr>
-            <tr>
-                <th>Name</th>
-                <th>City</th>
-                <th>Days</th>
-                <th>Base DSA ($)</th>
-                <th>Hotel Days</th>
-                <th>Meal Days</th>
-                <th>Legs</th>
-                <th>Total Incidental (${incidentalPercent}%)</th>
-                <th>Total Deductions ($)</th>
-                <th>Net Payable DSA ($)</th>
-                <th>Total TF ($)</th>
-                <th>Total USD</th>
-                <th>Total ${currencyCode} (Rate: ${unore})</th>
-            </tr>`;
+            <head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Sheet1</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+            <style>th { font-weight: bold; background-color: #f3f4f6; border: 1px solid #d1d5db; } td { border: 1px solid #d1d5db; vertical-align: middle; } .header-title { font-size: 14pt; font-weight: bold; text-align: left; border: none; } .header-meta { font-size: 10pt; font-style: italic; text-align: left; border: none; }</style></head><body>
+            <table><tr><td colspan="13" class="header-title">${missionName}</td></tr><tr><td colspan="13" class="header-meta">Generated Date: ${reportDate} | UNORE: ${unore} | Target: ${currencyCode} | Base: ${baseType}</td></tr><tr></tr>
+            <tr><th>Name</th><th>City</th><th>Days</th><th>Base DSA (${baseType === 'USD' ? '$' : currencyCode})</th><th>Hotel Days</th><th>Meal Days</th><th>Legs</th><th>Total Incidental (${incidentalPercent}%)</th><th>Total Deductions</th><th>Net Payable (Base)</th><th>Total TF ($)</th><th>Total USD</th><th>Total ${currencyCode} (Rate: ${unore})</th></tr>`;
 
-            // Data Rows with Formula Injection
             calculatedData.forEach((row, index) => {
-                const r = index + 5; // Excel row index (Header starts at 4 due to extra rows)
-                
-                // Formulas logic update for v2.2
-                
-                // Col H: Total Incidental = (Base * %) * Days
+                const r = index + 5; 
                 const formulaIncidental = `=(D${r}*${incidentalPercent/100})*C${r}`;
-                
-                // Col J: Net Payable = MAX(Total Incidental, (Base*Days) - Deductions)
-                const floorLogic = globalFloorRuleActive 
-                    ? `MAX(H${r}, (D${r}*C${r})-I${r})` 
-                    : `MAX(0, (D${r}*C${r})-I${r})`;
+                const floorLogic = globalFloorRuleActive ? `MAX(H${r}, (D${r}*C${r})-I${r})` : `MAX(0, (D${r}*C${r})-I${r})`;
                 const formulaNetPayable = `=${floorLogic}`;
+                let formulaFinalTotal = "";
+                if (baseType === 'USD') formulaFinalTotal = `=(J${r}+K${r})*${unore}`;
+                else formulaFinalTotal = `=J${r}+(K${r}*${unore})`;
 
-                // Col L: Total USD = NetPayable + TF
-                const formulaTotalUSD = `=J${r}+K${r}`;
-
-                // Col M: Total IDR
-                const formulaTotalIDR = `=L${r}*${unore}`;
-
-                table += `
-                <tr>
-                    <td>${row.name}</td>
-                    <td>${row.displayCity}</td>
-                    <td x:num>${row.days}</td>
-                    <td x:num>${row.dsaBase}</td>
-                    <td x:num>${row.actualHotelDays}</td>
-                    <td x:num>${row.actualMealDays}</td>
-                    <td x:num>${row.actualLegs}</td>
-                    <td x:num x:fmla="${formulaIncidental}">${row.totalIncidental.toFixed(2)}</td>
-                    <td x:num>${row.deductions.toFixed(2)}</td>
-                    <td x:num x:fmla="${formulaNetPayable}">${row.netPayable.toFixed(2)}</td>
-                    <td x:num>${row.totalTF}</td>
-                    <td x:num x:fmla="${formulaTotalUSD}">${row.totalUSD.toFixed(2)}</td>
-                    <td x:num x:fmla="${formulaTotalIDR}">${row.totalLocal.toFixed(0)}</td>
-                </tr>`;
+                table += `<tr><td>${row.name}</td><td>${row.displayCity}</td><td x:num>${row.days}</td><td x:num>${row.dsaBase}</td><td x:num>${row.actualHotelDays}</td><td x:num>${row.actualMealDays}</td><td x:num>${row.actualLegs}</td><td x:num x:fmla="${formulaIncidental}">${row.totalIncidental.toFixed(2)}</td><td x:num>${row.deductions.toFixed(2)}</td><td x:num x:fmla="${formulaNetPayable}">${row.netPayableBase.toFixed(2)}</td><td x:num>${row.totalTF_USD}</td><td x:num x:fmla="${baseType === 'USD' ? `=(J${r}+K${r})` : '0'}">${row.baseType === 'USD' ? row.finalTotal/unore : 0}</td><td x:num x:fmla="${formulaFinalTotal}">${row.finalTotal.toFixed(0)}</td></tr>`;
             });
-
             table += `</table></body></html>`;
 
             const cleanName = missionName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
@@ -1068,7 +909,6 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
             link.click();
             document.body.appendChild(link);
         }
-        
     </script>
 </body>
 </html>

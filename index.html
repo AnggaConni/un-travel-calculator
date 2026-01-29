@@ -47,7 +47,13 @@
         .active-slide {
             display: block;
             opacity: 1;
+            animation: fadeIn 0.5s ease-in-out;
         }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
         /* Progress bar for auto slide */
         .progress-bar {
             height: 3px;
@@ -96,10 +102,10 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
                     <i class="ph ph-airplane-tilt text-2xl text-blue-300"></i>
-                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v2.5</span></span>
+                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v2.7</span></span>
                 </div>
                 <div class="text-xs text-blue-200 hidden md:block text-right">
-                    Auto-Calculation Engine v2.5 (Global Showcase)
+                    Auto-Calculation Engine v2.7 (Dashboard)
                     <div class="font-semibold text-blue-100 mt-0.5">Angga Conni Saputra</div>
                 </div>
             </div>
@@ -111,99 +117,72 @@
         <!-- Header Controls (UNORE & Settings) -->
         <section class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <!-- Left Panel: Settings -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 md:col-span-2">
-                <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <i class="ph ph-sliders-horizontal text-lg"></i> Global Variables (Percentage)
-                </h2>
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- CURRENCY SELECTION UPDATE -->
-                    <div class="col-span-1">
-                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Target Currency & UNORE</label>
-                        <div class="flex gap-2">
-                            <select id="currencyCode" class="w-1/3 px-1 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition text-xs font-bold text-slate-700 bg-slate-50 cursor-pointer">
-                                <optgroup label="Default">
-                                    <option value="IDR" selected>IDR 🇮🇩</option>
-                                </optgroup>
-                                <optgroup label="Major Currencies">
-                                    <option value="USD">USD 🇺🇸</option>
-                                    <option value="EUR">EUR 🇪🇺</option>
-                                    <option value="GBP">GBP 🇬🇧</option>
-                                    <option value="CHF">CHF 🇨🇭 (Geneva)</option>
-                                    <option value="JPY">JPY 🇯🇵</option>
-                                    <option value="CNY">CNY 🇨🇳</option>
-                                </optgroup>
-                                <optgroup label="UN Regional HQs">
-                                    <option value="THB">THB 🇹🇭 (Bangkok)</option>
-                                    <option value="KES">KES 🇰🇪 (Nairobi)</option>
-                                    <option value="ETB">ETB 🇪🇹 (Addis)</option>
-                                    <option value="EGP">EGP 🇪🇬 (Cairo)</option>
-                                    <option value="JOD">JOD 🇯🇴 (Amman)</option>
-                                    <option value="CLP">CLP 🇨🇱 (Santiago)</option>
-                                </optgroup>
-                                <optgroup label="Asia Pacific">
-                                    <option value="MYR">MYR 🇲🇾</option>
-                                    <option value="PHP">PHP 🇵🇭</option>
-                                    <option value="SGD">SGD 🇸🇬</option>
-                                    <option value="VND">VND 🇻🇳</option>
-                                    <option value="MMK">MMK 🇲🇲</option>
-                                    <option value="KHR">KHR 🇰🇭</option>
-                                    <option value="LAK">LAK 🇱🇦</option>
-                                    <option value="INR">INR 🇮🇳</option>
-                                    <option value="PKR">PKR 🇵🇰</option>
-                                    <option value="BDT">BDT 🇧🇩</option>
-                                    <option value="LKR">LKR 🇱🇰</option>
-                                    <option value="NPR">NPR 🇳🇵</option>
-                                    <option value="AFN">AFN 🇦🇫</option>
-                                    <option value="KRW">KRW 🇰🇷</option>
-                                    <option value="AUD">AUD 🇦🇺</option>
-                                    <option value="NZD">NZD 🇳🇿</option>
-                                    <option value="FJD">FJD 🇫🇯</option>
-                                    <option value="PGK">PGK 🇵🇬</option>
-                                    <option value="TLS">USD (Timor-Leste)</option>
-                                </optgroup>
-                                <optgroup label="Peacekeeping/Field">
-                                    <option value="LBP">LBP 🇱🇧 (UNIFIL)</option>
-                                    <option value="CDF">CDF 🇨🇩 (MONUSCO)</option>
-                                    <option value="SSD">SSD 🇸🇸 (UNMISS)</option>
-                                    <option value="IQD">IQD 🇮🇶</option>
-                                    <option value="YER">YER 🇾🇪</option>
-                                    <option value="SYP">SYP 🇸🇾</option>
-                                    <option value="HTG">HTG 🇭🇹</option>
-                                    <option value="XOF">XOF (West Africa)</option>
-                                    <option value="XAF">XAF (Central Africa)</option>
-                                </optgroup>
-                                <optgroup label="Others">
-                                    <option value="TRY">TRY 🇹🇷</option>
-                                    <option value="ZAR">ZAR 🇿🇦</option>
-                                    <option value="NGN">NGN 🇳🇬</option>
-                                    <option value="BRL">BRL 🇧🇷</option>
-                                    <option value="MXN">MXN 🇲🇽</option>
-                                    <option value="COP">COP 🇨🇴</option>
-                                    <option value="ARS">ARS 🇦🇷</option>
-                                    <option value="CAD">CAD 🇨🇦</option>
-                                </optgroup>
-                            </select>
-                            <input type="number" id="unoreRate" value="15400" class="w-2/3 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-mono text-right font-bold text-blue-900" placeholder="Rate">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 md:col-span-2 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <i class="ph ph-sliders-horizontal text-lg"></i> Global Variables
+                    </h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- CURRENCY SELECTION -->
+                        <div class="col-span-1">
+                            <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Target Currency & UNORE</label>
+                            <div class="flex gap-2">
+                                <select id="currencyCode" class="w-1/3 px-1 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition text-xs font-bold text-slate-700 bg-slate-50 cursor-pointer">
+                                    <optgroup label="Default">
+                                        <option value="IDR" selected>IDR 🇮🇩</option>
+                                    </optgroup>
+                                    <optgroup label="Major Currencies">
+                                        <option value="USD">USD 🇺🇸</option>
+                                        <option value="EUR">EUR 🇪🇺</option>
+                                        <option value="GBP">GBP 🇬🇧</option>
+                                    </optgroup>
+                                    <optgroup label="Regional">
+                                        <option value="MYR">MYR 🇲🇾</option>
+                                        <option value="PHP">PHP 🇵🇭</option>
+                                        <option value="SGD">SGD 🇸🇬</option>
+                                        <option value="THB">THB 🇹🇭</option>
+                                    </optgroup>
+                                </select>
+                                <input type="number" id="unoreRate" value="15400" class="w-2/3 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-mono text-right font-bold text-blue-900" placeholder="Rate">
+                            </div>
                         </div>
-                        <p class="text-[9px] text-slate-400 mt-1">Select local currency & exchange rate</p>
+                        
+                        <!-- DEDUCTION PERCENTAGES -->
+                        <div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-600 mb-1">Meal Ded. %</label>
+                                    <div class="relative">
+                                        <input type="number" id="mealDedRate" value="30" class="w-full px-2 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-mono text-right text-sm">
+                                        <span class="absolute right-2 top-2 text-slate-400 text-xs">%</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-purple-600 mb-1">Incidental %</label>
+                                    <div class="relative">
+                                        <input type="number" id="incidentalRate" value="20" class="w-full px-2 py-2 border border-purple-200 bg-purple-50 text-purple-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none transition font-mono text-right font-bold text-sm">
+                                        <span class="absolute right-2 top-2 text-purple-400 text-xs">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs font-medium text-slate-600 mb-1">Meal Ded. %</label>
-                                <div class="relative">
-                                    <input type="number" id="mealDedRate" value="30" class="w-full px-2 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-mono text-right text-sm">
-                                    <span class="absolute right-2 top-2 text-slate-400 text-xs">%</span>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-purple-600 mb-1">Incidental %</label>
-                                <div class="relative">
-                                    <input type="number" id="incidentalRate" value="20" class="w-full px-2 py-2 border border-purple-200 bg-purple-50 text-purple-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none transition font-mono text-right font-bold text-sm">
-                                    <span class="absolute right-2 top-2 text-purple-400 text-xs">%</span>
-                                </div>
-                            </div>
+                </div>
+
+                <!-- NEW SECTION: MISSION DETAILS (Filling the Empty Space) -->
+                <div class="mt-4 pt-4 border-t border-slate-100">
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="col-span-2">
+                            <label class="block text-xs font-bold text-slate-600 mb-1 uppercase flex items-center gap-1">
+                                <i class="ph ph-file-text"></i> Mission / Event Name
+                            </label>
+                            <input type="text" id="missionName" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition text-sm text-slate-700 placeholder-slate-400" placeholder="e.g. Annual Review Meeting 2026">
+                        </div>
+                        <div class="col-span-1">
+                            <label class="block text-xs font-bold text-slate-600 mb-1 uppercase flex items-center gap-1">
+                                <i class="ph ph-calendar-blank"></i> Date
+                            </label>
+                            <input type="date" id="reportDate" class="w-full px-2 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition text-sm text-slate-700">
                         </div>
                     </div>
                 </div>
@@ -212,53 +191,82 @@
             <!-- Right Panel: Info Slideshow (Auto Rotating) -->
             <div id="slider-container" class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl border border-blue-100 md:col-span-2 flex flex-col justify-between relative overflow-hidden h-full group">
                 
-                <!-- Slide 1: Quick Guide -->
-                <div class="slide-content active-slide" id="slide-0">
-                    <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                        <i class="ph ph-info text-blue-600"></i> New Feature: Hotel Days
-                    </h3>
-                    <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                        <li><strong>Flexible Hotel Input:</strong> You can now specify <em>how many days</em> the hotel is provided.</li>
-                        <li><strong>'Y' or 'Yes'</strong> = Automatically calculates for ALL mission days.</li>
-                        <li><strong>Number (e.g., 3)</strong> = Calculates deduction for exactly 3 days.</li>
-                    </ul>
-                </div>
-
-                <!-- Slide 2: Calculation Logic -->
-                <div class="slide-content hidden-slide" id="slide-1">
-                    <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                        <i class="ph ph-function text-green-600"></i> Logic Update v2.2
-                    </h3>
-                    <div class="text-sm text-blue-800 space-y-2">
-                        <code class="bg-blue-100 px-2 py-1 rounded text-xs block">Hotel Ded = Base DSA * Room% * [Hotel Days]</code>
-                        <code class="bg-blue-100 px-2 py-1 rounded text-xs block">Meal Ded = Base DSA * Meal% * [Meal Days]</code>
-                        <p class="text-xs text-slate-600">Calculations are now precise per component day.</p>
+                <!-- STABILIZER WRAPPER (Min Height) -->
+                <div class="min-h-[220px] flex flex-col justify-center">
+                    
+                    <!-- Slide 1: Quick Guide -->
+                    <div class="slide-content active-slide" id="slide-0">
+                        <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
+                            <i class="ph ph-info text-blue-600"></i> New Feature: Hotel Days
+                        </h3>
+                        <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                            <li><strong>Flexible Hotel Input:</strong> Specify <em>how many days</em> the hotel is provided.</li>
+                            <li><strong>'Y' or 'Yes'</strong> = Automatically calculates for ALL mission days.</li>
+                            <li><strong>Number (e.g., 3)</strong> = Calculates deduction for exactly 3 days.</li>
+                        </ul>
                     </div>
-                </div>
 
-                <!-- Slide 3: Floor Rule -->
-                <div class="slide-content hidden-slide" id="slide-2">
-                    <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                        <i class="ph ph-shield-check text-orange-600"></i> Floor Rule Policy
-                    </h3>
-                    <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                        <li><strong>Incidentals (15-20%)</strong> are the staff's minimum entitlement.</li>
-                        <li>If active, the system guarantees staff receive at least the Incidental portion even if deductions are high.</li>
-                    </ul>
-                </div>
+                    <!-- Slide 2: Calculation Logic -->
+                    <div class="slide-content hidden-slide" id="slide-1">
+                        <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
+                            <i class="ph ph-function text-green-600"></i> Logic Update v2.2
+                        </h3>
+                        <div class="text-sm text-blue-800 space-y-2">
+                            <code class="bg-blue-100 px-2 py-1 rounded text-xs block">Hotel Ded = Base DSA * Room% * [Hotel Days]</code>
+                            <code class="bg-blue-100 px-2 py-1 rounded text-xs block">Meal Ded = Base DSA * Meal% * [Meal Days]</code>
+                            <p class="text-xs text-slate-600">Calculations are now precise per component day.</p>
+                        </div>
+                    </div>
 
-                <!-- Slide 4: External Link -->
-                <div class="slide-content hidden-slide" id="slide-3">
-                    <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                        <i class="ph ph-globe text-purple-600"></i> Official Data Source
-                    </h3>
-                    <p class="text-sm text-blue-800 mb-4">
-                        Always verify latest DSA & Room Rates via the official International Civil Service Commission (ICSC) website.
-                    </p>
-                    <a href="https://icsc.un.org/" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                        Open ICSC Website <i class="ph ph-arrow-square-out"></i>
-                    </a>
+                    <!-- Slide 3: Floor Rule -->
+                    <div class="slide-content hidden-slide" id="slide-2">
+                        <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
+                            <i class="ph ph-shield-check text-orange-600"></i> Floor Rule Policy
+                        </h3>
+                        <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                            <li><strong>Incidentals (15-20%)</strong> are the staff's minimum entitlement.</li>
+                            <li>If active, the system guarantees staff receive at least the Incidental portion even if deductions are high.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Slide 4: NEW TIP - Terminal Expenses -->
+                    <div class="slide-content hidden-slide" id="slide-3">
+                        <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
+                            <i class="ph ph-taxi text-purple-600"></i> Terminal Expenses (TF)
+                        </h3>
+                        <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                            <li>Standard Round Trip = <strong>4 Legs</strong> (Home-Airport-Dest-Airport-Home).</li>
+                            <li>Use <strong>0 Legs</strong> if an official vehicle is provided (No TF entitlement).</li>
+                            <li>Paris HQ has a special TF rate (check ICSC circular).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Slide 5: NEW TIP - Advance Payment -->
+                    <div class="slide-content hidden-slide" id="slide-4">
+                        <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
+                            <i class="ph ph-money text-emerald-600"></i> Advance Payments
+                        </h3>
+                        <div class="text-sm text-blue-800 space-y-2">
+                            <p>Typically, staff receive <strong>80% of estimated DSA</strong> before travel.</p>
+                            <p>This calculator shows the <strong>100% Final Entitlement</strong>. Deduct any advance received manually during the claim settlement (F10).</p>
+                        </div>
+                    </div>
+
+                    <!-- Slide 6: External Link -->
+                    <div class="slide-content hidden-slide" id="slide-5">
+                        <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
+                            <i class="ph ph-globe text-slate-600"></i> Official Data Source
+                        </h3>
+                        <p class="text-sm text-blue-800 mb-4">
+                            Always verify latest DSA & Room Rates via the official International Civil Service Commission (ICSC) website.
+                        </p>
+                        <a href="https://icsc.un.org/" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                            Open ICSC Website <i class="ph ph-arrow-square-out"></i>
+                        </a>
+                    </div>
+
                 </div>
+                <!-- END STABILIZER WRAPPER -->
 
                 <!-- Slider Controls -->
                 <div class="flex justify-between items-center mt-4 pt-4 border-t border-blue-100 z-10">
@@ -322,7 +330,6 @@
                     <button onclick="loadSampleParticipants()" class="text-[10px] bg-white border border-slate-300 px-2 py-1 rounded hover:bg-slate-50 text-slate-600 shadow-sm">Load Sample</button>
                 </div>
 
-                <!-- UPDATE: Added new columns visual guide -->
                 <div class="excel-header" style="grid-template-columns: 1.5fr 1fr 0.6fr 0.7fr 0.7fr 0.6fr;">
                     <div class="excel-cell">Name</div>
                     <div class="excel-cell">City</div>
@@ -364,9 +371,9 @@
                             </h2>
                             <span id="modeBadge" class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-500 border border-gray-200 font-normal">Mode: Unknown</span>
                             
-                            <!-- NEW BUTTON: Help for Excel -->
+                            <!-- Help Button -->
                             <button onclick="toggleCsvHelp()" class="text-xs flex items-center gap-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full border border-blue-200 transition">
-                                <i class="ph ph-question"></i> Why the Warning?
+                                <i class="ph ph-question"></i> Warning?
                             </button>
                         </div>
                         <p class="text-sm text-slate-500 mt-1">DSA Breakdown & Terminal Fare Estimation</p>
@@ -466,7 +473,7 @@
         </div>
     </div>
 
-    <!-- 2. DATA FORMAT GUIDE MODAL (NEW) -->
+    <!-- 2. DATA FORMAT GUIDE MODAL -->
     <div id="formatHelpModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleFormatHelp()"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -480,7 +487,6 @@
                     </div>
                     
                     <div class="p-6 space-y-6">
-                        <!-- Visual Column Guide -->
                         <div>
                             <h4 class="text-sm font-semibold text-slate-700 mb-2">Required Column Order (Left to Right):</h4>
                             <div class="flex text-xs font-mono border border-slate-300 rounded overflow-hidden">
@@ -492,8 +498,6 @@
                                 <div class="bg-slate-100 p-2 w-1/12 text-center">6.Legs</div>
                             </div>
                         </div>
-
-                        <!-- Explanation -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
                                 <div class="font-bold text-blue-800 text-sm mb-1">Column 4: Hotel Days</div>
@@ -512,7 +516,6 @@
                                 </ul>
                             </div>
                         </div>
-                        
                         <div class="text-xs text-slate-500 italic bg-slate-50 p-2 rounded">
                             * Tip: Copy your data from Excel (exclude headers) and paste it into the "Participant Data" box.
                         </div>
@@ -528,6 +531,12 @@
 
     <!-- JS Logic -->
     <script>
+        // Set Default Date to Today
+        window.addEventListener('load', () => {
+            document.getElementById('reportDate').valueAsDate = new Date();
+            initSlides();
+        });
+
         // --- 0. MODAL LOGIC ---
         function toggleCsvHelp() {
             const modal = document.getElementById('csvHelpModal');
@@ -543,7 +552,7 @@
 
         // --- 1. SLIDESHOW LOGIC ---
         let currentSlideIdx = 0;
-        const totalSlides = 4;
+        const totalSlides = 6; // UPDATED to 6 slides
         let slideInterval;
         let isPaused = false;
 
@@ -640,12 +649,9 @@
             resetProgressBar(); 
         });
 
-        window.addEventListener('load', initSlides);
-
 
         // --- 1. SAMPLE DATA ---
         function loadSampleRef() {
-            // Updated with International Cities
             const data = 
 `Paris\t400\t60\t70
 Jakarta\t238\t55\t47
@@ -662,7 +668,6 @@ Santiago\t240\t50\t47`;
         }
 
         function loadSampleParticipants() {
-            // Updated Sample Data: 25 Pax - International Showcase
             const data = 
 `Ahmad Fauzi\tParis\t5\t5\t2\t4
 Sarah Connor\tJakarta\t3\t0\t0\t0
@@ -697,27 +702,21 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
             return text.trim().split('\n').map(line => line.split('\t').map(cell => cell.trim()));
         }
 
-        // Improved Parsers for Foolproof Edition
         function parseDaysInput(val, totalDays) {
             if (!val) return 0;
-            // Check for explicit numbers first
             if (!isNaN(val)) return parseFloat(val);
-            
-            // Check for Yes/No text
             val = val.toLowerCase().trim();
             if (val === 'y' || val === 'yes' || val === 'ya' || val === 'true') return totalDays;
-            
-            return 0; // Default N/No/0
+            return 0; 
         }
 
         function parseLegs(val) {
-            if (val === '' || val === undefined) return 4; // Default to 4
+            if (val === '' || val === undefined) return 4; 
             if (!isNaN(val)) return parseFloat(val);
             return 4;
         }
 
         function formatCurrency(num, currency = 'USD') {
-            // Basic formatter, uses English formatting with dynamic currency code
             return new Intl.NumberFormat('en-US', { 
                 style: 'currency', 
                 currency: currency,
@@ -733,7 +732,7 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
         function processData(useFloorRule = true) {
             globalFloorRuleActive = useFloorRule; 
             const unore = parseFloat(document.getElementById('unoreRate').value) || 15400;
-            const currencyCode = document.getElementById('currencyCode').value; // GET CURRENCY
+            const currencyCode = document.getElementById('currencyCode').value; 
             const mealPercent = parseFloat(document.getElementById('mealDedRate').value) || 30;
             const incidentalPercent = parseFloat(document.getElementById('incidentalRate').value) || 20;
 
@@ -761,11 +760,9 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
             const tbody = document.getElementById('resultBody');
             tbody.innerHTML = '';
             
-            // Update Table Header for Currency
             const headerLocal = document.getElementById('headerTotalLocal');
             if(headerLocal) headerLocal.innerText = `Total (${currencyCode})`;
 
-            // Update Mode Badge
             const badge = document.getElementById('modeBadge');
             if(useFloorRule) {
                 badge.innerText = "Mode: With Floor Rule (Safe)";
@@ -778,13 +775,11 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
             partLines.forEach(person => {
                 if(person.length < 2) return;
 
-                // COLUMNS MAPPING
                 const name = person[0];
                 const cityKey = person[1].toLowerCase();
                 const displayCity = person[1];
                 const days = parseFloat(person[2]) || 0;
                 
-                // NEW: Hotel Days (Col 4) & Meal Days (Col 5) & TF Legs (Col 6)
                 const hotelDaysInput = person[3]; 
                 const mealDaysInput = person[4]; 
                 const legsInput = person[5];
@@ -803,25 +798,16 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
                     return;
                 }
 
-                // --- LOGIC PERHITUNGAN UPDATE v2.2 ---
-                
-                // 1. Gross Calculation
+                // CALC
                 const totalIncidental = (ref.dsa * (incidentalPercent / 100)) * days;
                 
-                // 2. Deductions
-                // Hotel Deduction (Variable Days)
                 const totalRoomDeduction = (ref.dsa * (ref.roomPct / 100)) * actualHotelDays;
-
-                // Meal Deduction (Variable Days)
                 const totalMealDeduction = (ref.dsa * (mealPercent / 100)) * actualMealDays;
-
                 const totalDeductions = totalRoomDeduction + totalMealDeduction;
 
-                // 3. Net Payable
                 const grossDSA = ref.dsa * days;
                 let netPayable = grossDSA - totalDeductions;
 
-                // 4. Floor Rule Check
                 let isFloorRuleApplied = false;
                 if (useFloorRule) {
                     if (netPayable < totalIncidental) {
@@ -831,12 +817,9 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
                 }
                 if (netPayable < 0) netPayable = 0;
 
-                // 5. Terminal Fare
                 const totalTF = ref.tf * actualLegs;
-
-                // 6. Grand Totals
                 const totalUSD = netPayable + totalTF;
-                const totalLocal = totalUSD * unore; // Calculate Local Currency
+                const totalLocal = totalUSD * unore;
 
                 totalGrandLocal += totalLocal;
 
@@ -883,7 +866,7 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // --- 4. EXPORT EXCEL WITH FORMULAS (AUDIT READY) ---
+        // --- 4. EXPORT EXCEL ---
         function exportToExcelWithFormulas() {
             if (calculatedData.length === 0) {
                 alert("Please calculate data first!");
@@ -893,6 +876,10 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
             const unore = parseFloat(document.getElementById('unoreRate').value) || 15400;
             const currencyCode = document.getElementById('currencyCode').value;
             const incidentalPercent = parseFloat(document.getElementById('incidentalRate').value) || 20;
+            
+            // GET METADATA
+            const missionName = document.getElementById('missionName').value || "UN Travel Audit Report";
+            const reportDate = document.getElementById('reportDate').value;
 
             // Define Table Header
             let table = `
@@ -903,7 +890,7 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
                 <x:ExcelWorkbook>
                 <x:ExcelWorksheets>
                 <x:ExcelWorksheet>
-                <x:Name>UN Travel Audit Report</x:Name>
+                <x:Name>Sheet1</x:Name>
                 <x:WorksheetOptions>
                 <x:DisplayGridlines/>
                 </x:WorksheetOptions>
@@ -915,10 +902,15 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
                 <style>
                     th { font-weight: bold; background-color: #f3f4f6; border: 1px solid #d1d5db; }
                     td { border: 1px solid #d1d5db; vertical-align: middle; }
+                    .header-title { font-size: 14pt; font-weight: bold; text-align: left; border: none; }
+                    .header-meta { font-size: 10pt; font-style: italic; text-align: left; border: none; }
                 </style>
             </head>
             <body>
             <table>
+            <tr><td colspan="13" class="header-title">${missionName}</td></tr>
+            <tr><td colspan="13" class="header-meta">Generated Date: ${reportDate} | UNORE: ${unore} | Currency: ${currencyCode}</td></tr>
+            <tr></tr>
             <tr>
                 <th>Name</th>
                 <th>City</th>
@@ -937,7 +929,7 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
 
             // Data Rows with Formula Injection
             calculatedData.forEach((row, index) => {
-                const r = index + 2; // Excel row index
+                const r = index + 5; // Excel row index (Header starts at 4 due to extra rows)
                 
                 // Formulas logic update for v2.2
                 
@@ -945,8 +937,6 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
                 const formulaIncidental = `=(D${r}*${incidentalPercent/100})*C${r}`;
                 
                 // Col J: Net Payable = MAX(Total Incidental, (Base*Days) - Deductions)
-                // Note: Logic logic is simplified here using pre-calculated deduction value. 
-                // We trust the JS deduction calculation for the "Audit" view.
                 const floorLogic = globalFloorRuleActive 
                     ? `MAX(H${r}, (D${r}*C${r})-I${r})` 
                     : `MAX(0, (D${r}*C${r})-I${r})`;
@@ -978,11 +968,12 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
 
             table += `</table></body></html>`;
 
+            const cleanName = missionName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
             const blob = new Blob([table], { type: 'application/vnd.ms-excel' });
             const link = document.createElement("a");
             const url = URL.createObjectURL(blob);
             link.href = url;
-            link.download = "UN_Travel_Audit_Report_v2.5.xls";
+            link.download = `${cleanName}_Audit_Report.xls`;
             document.body.appendChild(link);
             link.click();
             document.body.appendChild(link);

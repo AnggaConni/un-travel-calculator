@@ -102,10 +102,10 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
                     <i class="ph ph-airplane-tilt text-2xl text-blue-300"></i>
-                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v2.7</span></span>
+                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v2.9</span></span>
                 </div>
                 <div class="text-xs text-blue-200 hidden md:block text-right">
-                    Auto-Calculation Engine v2.7 (Dashboard)
+                    Auto-Calculation Engine v2.9 (Email Fix)
                     <div class="font-semibold text-blue-100 mt-0.5">Angga Conni Saputra</div>
                 </div>
             </div>
@@ -116,73 +116,79 @@
 
         <!-- Header Controls (UNORE & Settings) -->
         <section class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <!-- Left Panel: Settings -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 md:col-span-2 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <i class="ph ph-sliders-horizontal text-lg"></i> Global Variables
-                    </h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <!-- CURRENCY SELECTION -->
-                        <div class="col-span-1">
-                            <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Target Currency & UNORE</label>
-                            <div class="flex gap-2">
-                                <select id="currencyCode" class="w-1/3 px-1 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition text-xs font-bold text-slate-700 bg-slate-50 cursor-pointer">
-                                    <optgroup label="Default">
-                                        <option value="IDR" selected>IDR 🇮🇩</option>
-                                    </optgroup>
-                                    <optgroup label="Major Currencies">
-                                        <option value="USD">USD 🇺🇸</option>
-                                        <option value="EUR">EUR 🇪🇺</option>
-                                        <option value="GBP">GBP 🇬🇧</option>
-                                    </optgroup>
-                                    <optgroup label="Regional">
-                                        <option value="MYR">MYR 🇲🇾</option>
-                                        <option value="PHP">PHP 🇵🇭</option>
-                                        <option value="SGD">SGD 🇸🇬</option>
-                                        <option value="THB">THB 🇹🇭</option>
-                                    </optgroup>
-                                </select>
-                                <input type="number" id="unoreRate" value="15400" class="w-2/3 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-mono text-right font-bold text-blue-900" placeholder="Rate">
+            <!-- Left Panel: Settings (COMPACTED) -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 md:col-span-2 flex flex-col gap-4">
+                
+                <!-- Row 1: Core Financials -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-1">
+                        <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase">Currency & Rate</label>
+                        <div class="flex gap-2 h-9">
+                            <select id="currencyCode" class="w-1/3 px-1 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-xs font-bold text-slate-700 bg-slate-50 cursor-pointer">
+                                <optgroup label="Default">
+                                    <option value="IDR" selected>IDR 🇮🇩</option>
+                                </optgroup>
+                                <optgroup label="Major Currencies">
+                                    <option value="USD">USD 🇺🇸</option>
+                                    <option value="EUR">EUR 🇪🇺</option>
+                                    <option value="GBP">GBP 🇬🇧</option>
+                                    <option value="CHF">CHF 🇨🇭</option>
+                                    <option value="JPY">JPY 🇯🇵</option>
+                                    <option value="CNY">CNY 🇨🇳</option>
+                                </optgroup>
+                                <optgroup label="Regional">
+                                    <option value="MYR">MYR 🇲🇾</option>
+                                    <option value="PHP">PHP 🇵🇭</option>
+                                    <option value="SGD">SGD 🇸🇬</option>
+                                    <option value="THB">THB 🇹🇭</option>
+                                </optgroup>
+                            </select>
+                            <input type="number" id="unoreRate" value="15400" class="w-2/3 px-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono text-right font-bold text-blue-900 text-sm" placeholder="Rate">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-medium text-slate-500 mb-1">Meal Ded. %</label>
+                            <div class="relative h-9">
+                                <input type="number" id="mealDedRate" value="30" class="w-full h-full px-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono text-right text-sm">
+                                <span class="absolute right-2 top-2.5 text-slate-400 text-[10px]">%</span>
                             </div>
                         </div>
-                        
-                        <!-- DEDUCTION PERCENTAGES -->
                         <div>
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-xs font-medium text-slate-600 mb-1">Meal Ded. %</label>
-                                    <div class="relative">
-                                        <input type="number" id="mealDedRate" value="30" class="w-full px-2 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-mono text-right text-sm">
-                                        <span class="absolute right-2 top-2 text-slate-400 text-xs">%</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-purple-600 mb-1">Incidental %</label>
-                                    <div class="relative">
-                                        <input type="number" id="incidentalRate" value="20" class="w-full px-2 py-2 border border-purple-200 bg-purple-50 text-purple-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none transition font-mono text-right font-bold text-sm">
-                                        <span class="absolute right-2 top-2 text-purple-400 text-xs">%</span>
-                                    </div>
-                                </div>
+                            <label class="block text-[10px] font-medium text-purple-600 mb-1">Incidental %</label>
+                            <div class="relative h-9">
+                                <input type="number" id="incidentalRate" value="20" class="w-full h-full px-2 border border-purple-200 bg-purple-50 text-purple-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none font-mono text-right font-bold text-sm">
+                                <span class="absolute right-2 top-2.5 text-purple-400 text-[10px]">%</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- NEW SECTION: MISSION DETAILS (Filling the Empty Space) -->
-                <div class="mt-4 pt-4 border-t border-slate-100">
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="col-span-2">
-                            <label class="block text-xs font-bold text-slate-600 mb-1 uppercase flex items-center gap-1">
-                                <i class="ph ph-file-text"></i> Mission / Event Name
+                <!-- Row 2: Mission Meta Data -->
+                <div class="pt-3 border-t border-slate-100">
+                    <div class="grid grid-cols-12 gap-3">
+                        <div class="col-span-5">
+                            <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase flex items-center gap-1">
+                                <i class="ph ph-briefcase"></i> Mission / Event
                             </label>
-                            <input type="text" id="missionName" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition text-sm text-slate-700 placeholder-slate-400" placeholder="e.g. Annual Review Meeting 2026">
+                            <input type="text" id="missionName" class="w-full h-9 px-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-700 placeholder-slate-400" placeholder="e.g. Annual Review 2026">
                         </div>
-                        <div class="col-span-1">
-                            <label class="block text-xs font-bold text-slate-600 mb-1 uppercase flex items-center gap-1">
+                        <div class="col-span-3">
+                            <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase flex items-center gap-1">
                                 <i class="ph ph-calendar-blank"></i> Date
                             </label>
-                            <input type="date" id="reportDate" class="w-full px-2 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition text-sm text-slate-700">
+                            <input type="date" id="reportDate" class="w-full h-9 px-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-xs text-slate-700">
+                        </div>
+                        <div class="col-span-4 relative group">
+                            <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase flex items-center gap-1 cursor-help">
+                                <i class="ph ph-envelope-simple"></i> Email (Optional)
+                                <!-- INFO BUTTON FOR EMAIL -->
+                                <button onclick="toggleEmailHelp()" class="text-blue-400 hover:text-blue-600 transition">
+                                    <i class="ph ph-info"></i>
+                                </button>
+                            </label>
+                            <input type="email" id="recipientEmail" class="w-full h-9 px-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-700 placeholder-slate-400" placeholder="finance@un.org">
                         </div>
                     </div>
                 </div>
@@ -192,7 +198,7 @@
             <div id="slider-container" class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl border border-blue-100 md:col-span-2 flex flex-col justify-between relative overflow-hidden h-full group">
                 
                 <!-- STABILIZER WRAPPER (Min Height) -->
-                <div class="min-h-[220px] flex flex-col justify-center">
+                <div class="min-h-[180px] flex flex-col justify-center">
                     
                     <!-- Slide 1: Quick Guide -->
                     <div class="slide-content active-slide" id="slide-0">
@@ -383,9 +389,16 @@
                             <div class="text-xs text-slate-400">Total Payout (Est.)</div>
                             <div class="font-bold text-lg text-emerald-600" id="grandTotalDisplay">0</div>
                         </div>
-                        <button onclick="exportToExcelWithFormulas()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition shadow-md">
-                            <i class="ph ph-file-xls text-lg"></i> Export Excel (Audit Ready)
-                        </button>
+                        <!-- BUTTON GROUP: EMAIL & EXCEL -->
+                        <div class="flex gap-2">
+                            <!-- UPDATE: Call toggleEmailHelp instead of sendEmailReport directly -->
+                            <button onclick="toggleEmailHelp()" class="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition shadow-md" title="Email Summary">
+                                <i class="ph ph-paper-plane-tilt text-lg"></i>
+                            </button>
+                            <button onclick="exportToExcelWithFormulas()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition shadow-md">
+                                <i class="ph ph-file-xls text-lg"></i> Export Excel (Audit Ready)
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
@@ -529,6 +542,57 @@
         </div>
     </div>
 
+    <!-- 3. EMAIL GUIDE MODAL (NEW) -->
+    <div id="emailHelpModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleEmailHelp()"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center">
+                <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:w-full sm:max-w-xl border border-slate-100">
+                    <div class="bg-indigo-50 px-6 py-4 border-b border-indigo-100 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-indigo-900 flex items-center gap-2">
+                            <i class="ph ph-paper-plane-tilt text-indigo-600"></i> Email Reporting Guide
+                        </h3>
+                        <button onclick="toggleEmailHelp()" class="text-indigo-400 hover:text-indigo-600 transition"><i class="ph ph-x text-xl"></i></button>
+                    </div>
+                    
+                    <div class="p-6 space-y-4">
+                        <p class="text-sm text-slate-600">
+                            This feature helps you quickly send a summary of the calculation to the finance team or yourself using your default email application.
+                        </p>
+
+                        <!-- How it works -->
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                            <h4 class="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2"><i class="ph ph-gear text-slate-500"></i> How it Works</h4>
+                            <p class="text-xs text-slate-600">
+                                When you click <strong>"Launch Mail App"</strong>, the browser will open your computer's default email client (Outlook, Mail, Gmail, etc.) with the <strong>Subject</strong> and <strong>Body</strong> pre-filled with the mission summary.
+                            </p>
+                        </div>
+
+                        <!-- Audit Trail -->
+                        <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
+                            <h4 class="text-sm font-bold text-emerald-800 mb-2 flex items-center gap-2"><i class="ph ph-shield-check text-emerald-600"></i> Audit Trail</h4>
+                            <p class="text-xs text-slate-600">
+                                If a participant visits multiple locations (multiple rows in data), each entry will be listed separately in the email body, providing a clear audit trail for every leg of the journey.
+                            </p>
+                        </div>
+
+                        <!-- Troubleshooting -->
+                        <div class="text-xs text-slate-500 italic mt-2 border-t border-slate-100 pt-2">
+                            * Note: If the button doesn't respond, ensure a default email application is configured on your device. For large datasets (>50 rows), please use "Export Excel" instead.
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-50 px-6 py-4 flex justify-between items-center">
+                        <button type="button" onclick="toggleEmailHelp()" class="text-slate-500 hover:text-slate-700 text-sm font-medium transition">Close</button>
+                        <button type="button" onclick="executeMailTo()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-md flex items-center gap-2">
+                            Launch Mail App <i class="ph ph-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JS Logic -->
     <script>
         // Set Default Date to Today
@@ -540,19 +604,22 @@
         // --- 0. MODAL LOGIC ---
         function toggleCsvHelp() {
             const modal = document.getElementById('csvHelpModal');
-            if (modal.classList.contains('hidden')) modal.classList.remove('hidden');
-            else modal.classList.add('hidden');
+            modal.classList.toggle('hidden');
         }
 
         function toggleFormatHelp() {
             const modal = document.getElementById('formatHelpModal');
-            if (modal.classList.contains('hidden')) modal.classList.remove('hidden');
-            else modal.classList.add('hidden');
+            modal.classList.toggle('hidden');
+        }
+
+        function toggleEmailHelp() {
+            const modal = document.getElementById('emailHelpModal');
+            modal.classList.toggle('hidden');
         }
 
         // --- 1. SLIDESHOW LOGIC ---
         let currentSlideIdx = 0;
-        const totalSlides = 6; // UPDATED to 6 slides
+        const totalSlides = 6; 
         let slideInterval;
         let isPaused = false;
 
@@ -866,7 +933,51 @@ Angga Conni Saputra\tParis\t7\tY\t7\t4`;
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // --- 4. EXPORT EXCEL ---
+        // --- 4. SEND EMAIL (FIXED) ---
+        function executeMailTo() {
+            // Re-check calculation first
+            if (calculatedData.length === 0) {
+                alert("Please calculate data first!");
+                return;
+            }
+
+            const recipient = document.getElementById('recipientEmail').value || "";
+            const missionName = document.getElementById('missionName').value || "UN Travel Audit";
+            const reportDate = document.getElementById('reportDate').value;
+            const currencyCode = document.getElementById('currencyCode').value;
+            const grandTotal = document.getElementById('grandTotalDisplay').innerText;
+
+            let body = `Dear Finance/Admin,\n\nHere is the DSA calculation summary for:\n`;
+            body += `Mission: ${missionName}\n`;
+            body += `Date: ${reportDate}\n`;
+            body += `Total Estimate: ${grandTotal}\n`;
+            body += `--------------------------------------------------\n\n`;
+            
+            // Limit rows to avoid URL length issues (simple safeguard)
+            const maxRows = 30;
+            const dataToSend = calculatedData.slice(0, maxRows);
+            
+            dataToSend.forEach((row, index) => {
+                body += `${index + 1}. ${row.name} (${row.displayCity})\n`;
+                body += `   Days: ${row.days} | Net DSA: $${row.netPayable.toFixed(2)} | TF: $${row.totalTF}\n`;
+                body += `   Total: ${formatCurrency(row.totalLocal, currencyCode)}\n\n`;
+            });
+
+            if (calculatedData.length > maxRows) {
+                body += `... (and ${calculatedData.length - maxRows} more rows. Please see attached Excel)\n\n`;
+            }
+
+            body += `--------------------------------------------------\n`;
+            body += `Generated by UN Travel Calculator Engine v2.9`;
+
+            const subject = `[DSA Calc] ${missionName} - Summary`;
+            
+            // Close modal then open mail
+            toggleEmailHelp();
+            window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+
+        // --- 5. EXPORT EXCEL ---
         function exportToExcelWithFormulas() {
             if (calculatedData.length === 0) {
                 alert("Please calculate data first!");

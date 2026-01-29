@@ -73,25 +73,6 @@
             transition: none; /* Stop animation when paused */
             background: #f59e0b; /* Turn orange when paused */
         }
-        /* Modal Animation */
-        .modal-enter {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-        .modal-enter-active {
-            opacity: 1;
-            transform: scale(1);
-            transition: opacity 300ms, transform 300ms;
-        }
-        .modal-exit {
-            opacity: 1;
-            transform: scale(1);
-        }
-        .modal-exit-active {
-            opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 200ms, transform 200ms;
-        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-20 relative">
@@ -102,10 +83,10 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
                     <i class="ph ph-airplane-tilt text-2xl text-blue-300"></i>
-                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v3.4</span></span>
+                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v3.6</span></span>
                 </div>
                 <div class="text-xs text-blue-200 hidden md:block text-right">
-                    Auto-Calculation Engine v3.4 (Reassurance)
+                    Auto-Calculation Engine v3.6 (Smart Gen)
                     <div class="font-semibold text-blue-100 mt-0.5">Angga Conni Saputra</div>
                 </div>
             </div>
@@ -130,23 +111,65 @@
                             </button>
                         </div>
                         <div class="flex gap-2 h-9">
+                            <!-- EXPANDED CURRENCY LIST -->
                             <select id="currencyCode" onchange="updateBaseCurrencyLabel()" class="w-1/3 px-1 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-xs font-bold text-slate-700 bg-slate-50 cursor-pointer">
-                                <optgroup label="Default">
+                                <optgroup label="Primary">
                                     <option value="IDR" selected>IDR 🇮🇩</option>
-                                </optgroup>
-                                <optgroup label="Major Currencies">
                                     <option value="USD">USD 🇺🇸</option>
                                     <option value="EUR">EUR 🇪🇺</option>
-                                    <option value="GBP">GBP 🇬🇧</option>
-                                    <option value="CHF">CHF 🇨🇭</option>
-                                    <option value="JPY">JPY 🇯🇵</option>
-                                    <option value="CNY">CNY 🇨🇳</option>
                                 </optgroup>
-                                <optgroup label="Regional">
+                                <optgroup label="UN Regional HQs">
+                                    <option value="CHF">CHF 🇨🇭 (Geneva)</option>
+                                    <option value="THB">THB 🇹🇭 (Bangkok)</option>
+                                    <option value="KES">KES 🇰🇪 (Nairobi)</option>
+                                    <option value="ETB">ETB 🇪🇹 (Addis)</option>
+                                    <option value="JOD">JOD 🇯🇴 (Amman)</option>
+                                    <option value="CLP">CLP 🇨🇱 (Santiago)</option>
+                                    <option value="LBP">LBP 🇱🇧 (Beirut)</option>
+                                    <option value="EGP">EGP 🇪🇬 (Cairo)</option>
+                                </optgroup>
+                                <optgroup label="Asia & Pacific">
+                                    <option value="AFN">AFN 🇦🇫 (Kabul)</option>
+                                    <option value="AUD">AUD 🇦🇺</option>
+                                    <option value="BDT">BDT 🇧🇩</option>
+                                    <option value="CNY">CNY 🇨🇳</option>
+                                    <option value="FJD">FJD 🇫🇯</option>
+                                    <option value="INR">INR 🇮🇳</option>
+                                    <option value="JPY">JPY 🇯🇵</option>
+                                    <option value="KHR">KHR 🇰🇭</option>
+                                    <option value="KRW">KRW 🇰🇷</option>
+                                    <option value="LAK">LAK 🇱🇦</option>
+                                    <option value="LKR">LKR 🇱🇰</option>
+                                    <option value="MMK">MMK 🇲🇲</option>
+                                    <option value="MVR">MVR 🇲🇻</option>
                                     <option value="MYR">MYR 🇲🇾</option>
+                                    <option value="NPR">NPR 🇳🇵</option>
+                                    <option value="NZD">NZD 🇳🇿</option>
+                                    <option value="PGK">PGK 🇵🇬</option>
                                     <option value="PHP">PHP 🇵🇭</option>
+                                    <option value="PKR">PKR 🇵🇰</option>
                                     <option value="SGD">SGD 🇸🇬</option>
-                                    <option value="THB">THB 🇹🇭</option>
+                                    <option value="VND">VND 🇻🇳</option>
+                                </optgroup>
+                                <optgroup label="Other UN Offices">
+                                    <option value="AED">AED 🇦🇪</option>
+                                    <option value="ARS">ARS 🇦🇷</option>
+                                    <option value="BRL">BRL 🇧🇷</option>
+                                    <option value="CAD">CAD 🇨🇦</option>
+                                    <option value="CDF">CDF 🇨🇩 (Kinshasa)</option>
+                                    <option value="COP">COP 🇨🇴</option>
+                                    <option value="GHS">GHS 🇬🇭</option>
+                                    <option value="HTG">HTG 🇭🇹</option>
+                                    <option value="IQD">IQD 🇮🇶</option>
+                                    <option value="MXN">MXN 🇲🇽</option>
+                                    <option value="NGN">NGN 🇳🇬</option>
+                                    <option value="SAR">SAR 🇸🇦</option>
+                                    <option value="SOS">SOS 🇸🇴</option>
+                                    <option value="SSD">SSD 🇸🇸</option>
+                                    <option value="SYP">SYP 🇸🇾</option>
+                                    <option value="TRY">TRY 🇹🇷</option>
+                                    <option value="YER">YER 🇾🇪</option>
+                                    <option value="ZAR">ZAR 🇿🇦</option>
                                 </optgroup>
                             </select>
                             <input type="number" id="unoreRate" value="15400" class="w-2/3 px-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono text-right font-bold text-blue-900 text-sm" placeholder="Rate">
@@ -204,22 +227,22 @@
                 
                 <div class="min-h-[180px] flex flex-col justify-center">
                     
-                    <!-- Slide 1: Currency Logic -->
+                    <!-- Slide 1: Quick Guide -->
                     <div class="slide-content active-slide" id="slide-0">
                         <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                            <i class="ph ph-currency-circle-dollar text-blue-600"></i> Dual Currency Logic
+                            <i class="ph ph-info text-blue-600"></i> Smart Auto-Generate
                         </h3>
                         <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                            <li><strong>Local Base (IDR):</strong> For local staff paid in local currency.</li>
-                            <li><strong>USD Base ($):</strong> For international experts paid in USD.</li>
-                            <li><strong>Advice:</strong> Run separate calculations for each group.</li>
+                            <li><strong>New Feature:</strong> "Load Sample" on Participant side is now smart.</li>
+                            <li>It reads your Reference Data cities first.</li>
+                            <li>Then it generates 10 dummy participants <strong>automatically matched</strong> to those cities. No more "City not found" errors!</li>
                         </ul>
                     </div>
 
-                    <!-- Slide 2: Deduction Logic (CLARIFIED) -->
+                    <!-- Slide 2: Deduction Logic -->
                     <div class="slide-content hidden-slide" id="slide-1">
                         <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                            <i class="ph ph-scissors text-red-600"></i> Deduction Explained
+                            <i class="ph ph-scissors text-red-600"></i> Deduction Logic
                         </h3>
                         <div class="text-sm text-blue-800 space-y-2">
                             <p class="font-semibold text-xs">If Organizer pays -> We deduct from DSA.</p>
@@ -254,15 +277,16 @@
                         </ul>
                     </div>
 
-                    <!-- Slide 5: NEW TIP - Advance Payment -->
+                    <!-- Slide 5: Currency Logic -->
                     <div class="slide-content hidden-slide" id="slide-4">
                         <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                            <i class="ph ph-money text-emerald-600"></i> Advance Payments
+                            <i class="ph ph-currency-circle-dollar text-blue-600"></i> Dual Currency Logic
                         </h3>
-                        <div class="text-sm text-blue-800 space-y-2">
-                            <p>Typically, staff receive <strong>80% of estimated DSA</strong> before travel.</p>
-                            <p>This calculator shows the <strong>100% Final Entitlement</strong>. Deduct any advance received manually during the claim settlement (F10).</p>
-                        </div>
+                        <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                            <li><strong>Local Base (IDR):</strong> For local staff paid in local currency.</li>
+                            <li><strong>USD Base ($):</strong> For international experts paid in USD.</li>
+                            <li><strong>Advice:</strong> Run separate calculations for each group.</li>
+                        </ul>
                     </div>
 
                     <!-- Slide 6: External Link -->
@@ -308,6 +332,7 @@
                         <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
                             <i class="ph ph-database text-blue-600"></i> Reference Data
                         </h3>
+                        <!-- DYNAMIC BUTTON: Loads based on currency -->
                         <button onclick="loadSampleRef()" class="text-[10px] bg-white border border-slate-300 px-2 py-1 rounded hover:bg-slate-50 text-slate-600 shadow-sm">Load Sample</button>
                     </div>
                     
@@ -350,7 +375,7 @@
                         </h3>
                         <p class="text-[10px] text-slate-500 mt-2">Paste from Excel (See <i class="ph ph-info inline"></i> for columns)</p>
                     </div>
-                    <button onclick="loadSampleParticipants()" class="text-[10px] bg-white border border-slate-300 px-2 py-1 rounded hover:bg-slate-50 text-slate-600 shadow-sm">Load Sample</button>
+                    <button onclick="loadSampleParticipants()" class="text-[10px] bg-white border border-slate-300 px-2 py-1 rounded hover:bg-slate-50 text-slate-600 shadow-sm">Load Auto-Dummy (10)</button>
                 </div>
 
                 <div class="excel-header" style="grid-template-columns: 1.5fr 1fr 0.6fr 0.7fr 0.7fr 0.6fr;">
@@ -394,7 +419,7 @@
                             </h2>
                             <span id="modeBadge" class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-500 border border-gray-200 font-normal">Mode: Unknown</span>
                             
-                            <!-- Help Button (REASSURING STYLE) -->
+                            <!-- Help Button -->
                             <button onclick="toggleCsvHelp()" class="text-xs flex items-center gap-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full border border-blue-200 transition font-semibold">
                                 <i class="ph ph-warning-circle text-lg"></i> Excel Warning?
                             </button>
@@ -489,7 +514,6 @@
     </div>
 
     <!-- OTHER MODALS -->
-    <!-- CSV HELP (REASSURING EDITION) -->
     <div id="csvHelpModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleCsvHelp()"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -531,7 +555,7 @@
         </div>
     </div>
 
-    <!-- FORMAT HELP (FOOLPROOF EDITION) -->
+    <!-- FORMAT HELP -->
     <div id="formatHelpModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleFormatHelp()"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -620,6 +644,97 @@
             updateBaseCurrencyLabel();
             initSlides();
         });
+
+        // --- 1. DYNAMIC SAMPLE DATA (NEW) ---
+        function loadSampleRef() {
+            const baseType = document.getElementById('baseCurrency').value;
+            let data = "";
+            
+            if (baseType === 'USD') {
+                // USD Context Samples
+                data = 
+`Paris\t400\t60\t70
+New York\t450\t65\t90
+Geneva\t380\t55\t60
+Nairobi\t250\t50\t47
+Bangkok\t210\t50\t47`;
+            } else {
+                // Local/Target Context Samples (e.g. IDR)
+                data = 
+`Jakarta\t4500000\t55\t47
+Bali\t3200000\t45\t47
+Bandung\t2800000\t40\t47
+Surabaya\t2500000\t40\t47
+Lombok\t3000000\t45\t47`;
+            }
+            document.getElementById('refInput').value = data;
+        }
+
+        // --- SMART DUMMY GENERATOR (NEW) ---
+        function loadSampleParticipants() {
+            // 1. Read Reference Data to get valid cities
+            const refText = document.getElementById('refInput').value;
+            const refLines = refText.trim().split('\n');
+            const validCities = [];
+            
+            refLines.forEach(line => {
+                const cols = line.split('\t');
+                if (cols.length > 0 && cols[0].trim() !== "") {
+                    validCities.push(cols[0].trim());
+                }
+            });
+
+            // Fallback if Ref Data is empty
+            if (validCities.length === 0) {
+                alert("Please load or enter Reference Data first!");
+                loadSampleRef(); // Auto load ref
+                return; // Let user click again to see effect or recall? Better to recurse once.
+                // Actually, let's just use default list if empty to prevent crash
+                validCities.push("Jakarta", "Bali");
+            }
+
+            // 2. Generate 10 Dummy Participants
+            const dummyNames = [
+                "Ahmad Fauzi", "Sarah Connor", "John Wick", "Ratna Sari", "Budi Doremi",
+                "Siti Nurhaliza", "Jean-Claude", "Fatima Ahmed", "Wei Chen", "Maria Garcia"
+            ];
+            
+            let participantData = "";
+            
+            for (let i = 0; i < 10; i++) {
+                const name = dummyNames[i % dummyNames.length];
+                // Pick random city from Valid Cities
+                const city = validCities[Math.floor(Math.random() * validCities.length)];
+                
+                // Random Days (3 to 7)
+                const days = Math.floor(Math.random() * 5) + 3;
+                
+                // Random Hotel (0 or Days or 'Y')
+                // Logic: 30% chance self-paid (0), 50% chance full (Y), 20% partial
+                const rHotel = Math.random();
+                let hotel = "0";
+                if (rHotel > 0.3) {
+                    if (rHotel > 0.8) hotel = Math.max(1, days - 1); // Partial
+                    else hotel = "Y"; // Full
+                }
+
+                // Random Meal (0, 2, Y)
+                const rMeal = Math.random();
+                let meal = "0";
+                if (rMeal > 0.4) {
+                    meal = Math.floor(Math.random() * (days + 1)); // Random 0 to Days
+                    if (meal === days) meal = "Y";
+                }
+
+                // Random Legs (0, 2, 4)
+                const legsOptions = [0, 2, 4, 4, 4]; // Weighted to 4
+                const legs = legsOptions[Math.floor(Math.random() * legsOptions.length)];
+
+                participantData += `${name}\t${city}\t${days}\t${hotel}\t${meal}\t${legs}\n`;
+            }
+
+            document.getElementById('partInput').value = participantData;
+        }
 
         function updateBaseCurrencyLabel() {
             const targetCurrency = document.getElementById('currencyCode').value;
@@ -712,38 +827,12 @@
         container.addEventListener('mouseenter', () => { isPaused = true; document.getElementById('slider-container').classList.add('paused'); });
         container.addEventListener('mouseleave', () => { isPaused = false; document.getElementById('slider-container').classList.remove('paused'); resetProgressBar(); });
 
-        // --- SAMPLE DATA (RESTORED TO 11 PAX) ---
-        function loadSampleRef() {
-            const data = 
-`Jakarta\t4500000\t55\t47
-Bali\t3200000\t45\t47
-Paris\t400\t60\t70
-New York\t450\t65\t90`;
-            document.getElementById('refInput').value = data;
-        }
-
-        function loadSampleParticipants() {
-            const data = 
-`Ahmad Fauzi\tParis\t5\t5\t2\t4
-Sarah Connor\tJakarta\t3\t0\t0\t0
-John Wick\tNew York\t4\t4\t4\t4
-Ratna Sari\tBali\t3\tY\t1\t4
-Budi Doremi\tJakarta\t2\tY\t0\t0
-Siti Nurhaliza\tBali\t4\tN\t0\t4
-Jean-Claude\tParis\t5\tY\t3\t4
-Fatima Ahmed\tNew York\t6\tY\t6\t4
-Wei Chen\tBali\t5\tN\t0\t4
-Maria Garcia\tJakarta\t4\tY\t2\t0
-Yuki Tanaka\tParis\t3\tY\t3\t4`;
-            document.getElementById('partInput').value = data;
-        }
-
         // --- PARSERS & LOGIC ---
         function parseTSV(text) { return text.trim().split('\n').map(line => line.split('\t').map(cell => cell.trim())); }
         function parseDaysInput(val, totalDays) {
             if (!val) return 0;
             if (!isNaN(val)) return parseFloat(val);
-            val = val.toLowerCase().trim();
+            val = val.toString().toLowerCase().trim();
             if (val === 'y' || val === 'yes' || val === 'ya' || val === 'true') return totalDays;
             return 0; 
         }
@@ -772,7 +861,7 @@ Yuki Tanaka\tParis\t3\tY\t3\t4`;
             const cityMap = {};
             refLines.forEach(line => {
                 if(line.length >= 2) {
-                    const cityKey = line[0].toLowerCase();
+                    const cityKey = line[0].trim().toLowerCase();
                     cityMap[cityKey] = {
                         dsa: parseFloat(line[1]) || 0,
                         roomPct: parseFloat(line[2]) || 50,
@@ -807,8 +896,8 @@ Yuki Tanaka\tParis\t3\tY\t3\t4`;
             partLines.forEach(person => {
                 if(person.length < 2) return;
                 const name = person[0];
-                const cityKey = person[1].toLowerCase();
                 const displayCity = person[1];
+                const cityKey = displayCity.trim().toLowerCase();
                 const days = parseFloat(person[2]) || 0;
                 const hotelDaysInput = person[3]; 
                 const mealDaysInput = person[4]; 
@@ -821,7 +910,7 @@ Yuki Tanaka\tParis\t3\tY\t3\t4`;
                 if (!ref) {
                     const tr = document.createElement('tr');
                     tr.className = "bg-red-50 text-red-600";
-                    tr.innerHTML = `<td colspan="12" class="px-6 py-4">Error: City <strong>${displayCity}</strong> not found.</td>`;
+                    tr.innerHTML = `<td colspan="12" class="px-6 py-4">Error: City <strong>${displayCity}</strong> not found. Please update Reference Data.</td>`;
                     tbody.appendChild(tr);
                     return;
                 }
@@ -909,7 +998,7 @@ Yuki Tanaka\tParis\t3\tY\t3\t4`;
                 body += `${index + 1}. ${row.name} (${row.displayCity})\n   Days: ${row.days} | Net Base: ${row.netPayableBase.toFixed(2)} | TF: $${row.totalTF_USD}\n   Final: ${formatCurrency(row.finalTotal, currencyCode)}\n\n`;
             });
             if (calculatedData.length > maxRows) body += `... (and ${calculatedData.length - maxRows} more rows. Please see attached Excel)\n\n`;
-            body += `--------------------------------------------------\nGenerated by UN Travel Calculator Engine v3.4`;
+            body += `--------------------------------------------------\nGenerated by UN Travel Calculator Engine v3.6`;
             const subject = `[DSA Calc] ${missionName} - Summary`;
             toggleEmailHelp();
             window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;

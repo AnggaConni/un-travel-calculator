@@ -96,10 +96,10 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
                     <i class="ph ph-airplane-tilt text-2xl text-blue-300"></i>
-                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition</span></span>
+                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v2.2</span></span>
                 </div>
                 <div class="text-xs text-blue-200 hidden md:block text-right">
-                    Auto-Calculation Engine v2.0 (EN)
+                    Auto-Calculation Engine v2.2 (Foolproof)
                     <div class="font-semibold text-blue-100 mt-0.5">Angga Conni Saputra</div>
                 </div>
             </div>
@@ -151,28 +151,24 @@
                 <!-- Slide 1: Quick Guide -->
                 <div class="slide-content active-slide" id="slide-0">
                     <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                        <i class="ph ph-info text-blue-600"></i> How to Use
+                        <i class="ph ph-info text-blue-600"></i> New Feature: Hotel Days
                     </h3>
                     <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                        <li>Prepare data in Excel (without headers).</li>
-                        <li><strong>Left:</strong> City Reference Data (DSA Rate, Room %, TF).</li>
-                        <li><strong>Right:</strong> Participant Data (Name, City, Days, Hotel/Meal Status).</li>
-                        <li>Select Calculation Mode (Floor Rule / No Floor Rule).</li>
+                        <li><strong>Flexible Hotel Input:</strong> You can now specify <em>how many days</em> the hotel is provided.</li>
+                        <li><strong>'Y' or 'Yes'</strong> = Automatically calculates for ALL mission days.</li>
+                        <li><strong>Number (e.g., 3)</strong> = Calculates deduction for exactly 3 days.</li>
                     </ul>
                 </div>
 
                 <!-- Slide 2: Calculation Logic -->
                 <div class="slide-content hidden-slide" id="slide-1">
                     <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                        <i class="ph ph-function text-green-600"></i> Calculation Logic
+                        <i class="ph ph-function text-green-600"></i> Logic Update v2.2
                     </h3>
                     <div class="text-sm text-blue-800 space-y-2">
-                        <p>Basic calculation formula:</p>
-                        <code class="bg-blue-100 px-2 py-1 rounded text-xs block">Net DSA = Base DSA - (Hotel Ded. + Meal Ded.)</code>
-                        <ul class="list-disc list-inside text-xs mt-1 opacity-80">
-                            <li>Hotel Ded. = Base DSA x Room % (if provided)</li>
-                            <li>Meal Ded. = Base DSA x Meal % (if provided)</li>
-                        </ul>
+                        <code class="bg-blue-100 px-2 py-1 rounded text-xs block">Hotel Ded = Base DSA * Room% * [Hotel Days]</code>
+                        <code class="bg-blue-100 px-2 py-1 rounded text-xs block">Meal Ded = Base DSA * Meal% * [Meal Days]</code>
+                        <p class="text-xs text-slate-600">Calculations are now precise per component day.</p>
                     </div>
                 </div>
 
@@ -184,24 +180,11 @@
                     <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
                         <li><strong>Incidentals (15-20%)</strong> are the staff's minimum entitlement.</li>
                         <li>If active, the system guarantees staff receive at least the Incidental portion even if deductions are high.</li>
-                        <li>Turn this off (Grey Button) to view raw mathematical values.</li>
                     </ul>
                 </div>
 
-                <!-- Slide 4: Pro Tips -->
+                <!-- Slide 4: External Link -->
                 <div class="slide-content hidden-slide" id="slide-3">
-                    <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                        <i class="ph ph-lightbulb text-yellow-500"></i> Tips & Tricks
-                    </h3>
-                    <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                        <li>Use <strong>"No Floor Rule"</strong> to audit worst-case budgets.</li>
-                        <li>Double-check the <strong>"Room %"</strong> column in ICSC monthly, it fluctuates.</li>
-                        <li>Paris TF often differs from Global Rate ($47), ensure manual input.</li>
-                    </ul>
-                </div>
-
-                <!-- Slide 5: External Link -->
-                <div class="slide-content hidden-slide" id="slide-4">
                     <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
                         <i class="ph ph-globe text-purple-600"></i> Official Data Source
                     </h3>
@@ -264,22 +247,29 @@
                     <div>
                         <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
                             <i class="ph ph-users text-green-600"></i> Participant Data
+                            
+                            <!-- NEW INFO BUTTON -->
+                            <button onclick="toggleFormatHelp()" class="ml-2 text-blue-500 hover:text-blue-700 transition" title="Click for Format Guide">
+                                <i class="ph ph-info text-lg bg-blue-50 rounded-full p-0.5"></i>
+                            </button>
                         </h3>
-                        <p class="text-[10px] text-slate-500 mt-0.5">Copy from Excel (no header) & Paste below</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Paste from Excel (See <i class="ph ph-info inline"></i> for columns)</p>
                     </div>
                     <button onclick="loadSampleParticipants()" class="text-[10px] bg-white border border-slate-300 px-2 py-1 rounded hover:bg-slate-50 text-slate-600 shadow-sm">Load Sample</button>
                 </div>
 
-                <div class="excel-header" style="grid-template-columns: 2fr 1.5fr 0.8fr 1fr 1fr;">
-                    <div class="excel-cell">Participant Name</div>
-                    <div class="excel-cell">Destination</div>
+                <!-- UPDATE: Added new columns visual guide -->
+                <div class="excel-header" style="grid-template-columns: 1.5fr 1fr 0.6fr 0.7fr 0.7fr 0.6fr;">
+                    <div class="excel-cell">Name</div>
+                    <div class="excel-cell">City</div>
                     <div class="excel-cell text-center">Days</div>
-                    <div class="excel-cell text-center">Hotel?</div>
-                    <div class="excel-cell text-center">Meals?</div>
+                    <div class="excel-cell text-center">Hotel Days</div>
+                    <div class="excel-cell text-center">Meal Days</div>
+                    <div class="excel-cell text-center">Legs</div>
                 </div>
 
                 <div class="relative flex-1 group">
-                    <textarea id="partInput" class="w-full h-full p-4 font-mono text-xs focus:outline-none resize-none bg-slate-50/30 group-hover:bg-white transition-colors" placeholder="Format example:&#10;Ahmad	Paris	5	Y	N&#10;Sarah	Jakarta	3	N	N&#10;... (Paste your data here)"></textarea>
+                    <textarea id="partInput" class="w-full h-full p-4 font-mono text-xs focus:outline-none resize-none bg-slate-50/30 group-hover:bg-white transition-colors" placeholder="Format example:&#10;Ahmad	Paris	5	5	3	4&#10;Sarah	Jakarta	3	0	0	0&#10;... (Paste your data here)"></textarea>
                 </div>
             </div>
         </div>
@@ -337,8 +327,10 @@
                                 <th class="px-4 py-3 text-center">Days</th>
                                 <th class="px-4 py-3 text-center">Base DSA</th>
                                 <th class="px-4 py-3 text-center text-purple-600 bg-purple-50">Incidental ($)</th>
+                                <th class="px-4 py-3 text-center bg-blue-50 text-blue-800">Hotel Days</th>
+                                <th class="px-4 py-3 text-center bg-yellow-50 text-yellow-800">Meal Days</th>
                                 <th class="px-4 py-3 text-right">Deductions</th>
-                                <th class="px-4 py-3 text-right font-bold text-blue-700">Net Daily ($)</th>
+                                <th class="px-4 py-3 text-right font-bold text-blue-700">Net Payable ($)</th>
                                 <th class="px-4 py-3 text-right">TF ($)</th>
                                 <th class="px-4 py-3 text-right bg-gray-50">Total USD</th>
                                 <th class="px-4 py-3 text-right font-bold text-emerald-700">Total IDR</th>
@@ -354,7 +346,7 @@
 
     </main>
 
-    <!-- HELP MODAL (UPDATED FOR EXCEL WARNINGS - ENGLISH) -->
+    <!-- 1. EXCEL OPENING GUIDE MODAL -->
     <div id="csvHelpModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <!-- Background backdrop -->
         <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleCsvHelp()"></div>
@@ -385,9 +377,6 @@
                                         <p class="text-xs font-semibold text-slate-800 mt-1">
                                             ✅ Solution: Click "YES".
                                         </p>
-                                        <p class="text-[10px] text-slate-500 mt-1">
-                                            (This file is safe, it only contains calculation tables).
-                                        </p>
                                     </div>
 
                                     <div class="bg-blue-50 p-3 rounded-md border border-blue-200">
@@ -413,26 +402,88 @@
         </div>
     </div>
 
+    <!-- 2. DATA FORMAT GUIDE MODAL (NEW) -->
+    <div id="formatHelpModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleFormatHelp()"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center">
+                <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:w-full sm:max-w-2xl border border-slate-100">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i class="ph ph-table text-blue-600"></i> Excel Data Format Guide
+                        </h3>
+                        <button onclick="toggleFormatHelp()" class="text-slate-400 hover:text-slate-600 transition"><i class="ph ph-x text-xl"></i></button>
+                    </div>
+                    
+                    <div class="p-6 space-y-6">
+                        <!-- Visual Column Guide -->
+                        <div>
+                            <h4 class="text-sm font-semibold text-slate-700 mb-2">Required Column Order (Left to Right):</h4>
+                            <div class="flex text-xs font-mono border border-slate-300 rounded overflow-hidden">
+                                <div class="bg-slate-100 p-2 border-r border-slate-200 w-1/6">1.Name</div>
+                                <div class="bg-slate-100 p-2 border-r border-slate-200 w-1/6">2.City</div>
+                                <div class="bg-slate-100 p-2 border-r border-slate-200 w-1/12 text-center">3.Days</div>
+                                <div class="bg-blue-50 p-2 border-r border-blue-200 w-1/6 text-blue-800 font-bold text-center">4.Hotel Days</div>
+                                <div class="bg-yellow-50 p-2 border-r border-yellow-200 w-1/6 text-yellow-800 font-bold text-center">5.Meal Days</div>
+                                <div class="bg-slate-100 p-2 w-1/12 text-center">6.Legs</div>
+                            </div>
+                        </div>
+
+                        <!-- Explanation -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                <div class="font-bold text-blue-800 text-sm mb-1">Column 4: Hotel Days</div>
+                                <ul class="list-disc list-inside text-xs text-slate-600 space-y-1">
+                                    <li>Type <strong>Number</strong> (e.g., <code>3</code>) = Hotel provided for 3 days.</li>
+                                    <li>Type <strong>'Y'</strong> or <strong>'Yes'</strong> = Hotel provided for ALL mission days.</li>
+                                    <li>Type <strong>'N'</strong>, <strong>'0'</strong>, or leave blank = No hotel provided.</li>
+                                </ul>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                                <div class="font-bold text-yellow-800 text-sm mb-1">Column 5: Meal Days</div>
+                                <ul class="list-disc list-inside text-xs text-slate-600 space-y-1">
+                                    <li>Type <strong>Number</strong> (e.g., <code>2</code>) = Meals provided for 2 days.</li>
+                                    <li>Type <strong>'Y'</strong> or <strong>'Yes'</strong> = Meals provided for ALL days.</li>
+                                    <li>Type <strong>'N'</strong> or <strong>'0'</strong> = No meals provided.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="text-xs text-slate-500 italic bg-slate-50 p-2 rounded">
+                            * Tip: Copy your data from Excel (exclude headers) and paste it into the "Participant Data" box.
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-50 px-6 py-3 flex justify-end">
+                        <button type="button" onclick="toggleFormatHelp()" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">Close Guide</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JS Logic -->
     <script>
-        // --- 0. HELP MODAL LOGIC ---
+        // --- 0. MODAL LOGIC ---
         function toggleCsvHelp() {
             const modal = document.getElementById('csvHelpModal');
-            if (modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden');
-            } else {
-                modal.classList.add('hidden');
-            }
+            if (modal.classList.contains('hidden')) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
         }
 
-        // --- 1. SLIDESHOW LOGIC (AUTO ROTATE + HOVER PAUSE) ---
+        function toggleFormatHelp() {
+            const modal = document.getElementById('formatHelpModal');
+            if (modal.classList.contains('hidden')) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
+        }
+
+        // --- 1. SLIDESHOW LOGIC ---
         let currentSlideIdx = 0;
-        const totalSlides = 5; // Updated to 5 slides
+        const totalSlides = 4;
         let slideInterval;
         let isPaused = false;
 
         function initSlides() {
-            // Generate dots dynamically based on totalSlides
             const dotsContainer = document.getElementById('dots-container');
             dotsContainer.innerHTML = '';
             for(let i=0; i<totalSlides; i++) {
@@ -446,7 +497,6 @@
         }
 
         function updateSlides() {
-            // Update visibility
             for (let i = 0; i < totalSlides; i++) {
                 const el = document.getElementById(`slide-${i}`);
                 if (el) {
@@ -459,7 +509,6 @@
                     }
                 }
             }
-            // Update dots
             for (let i = 0; i < totalSlides; i++) {
                 const dot = document.getElementById(`dot-${i}`);
                 if (dot) {
@@ -472,7 +521,6 @@
                     }
                 }
             }
-            // Reset Progress Bar Animation
             resetProgressBar();
         }
 
@@ -489,64 +537,45 @@
         function setSlide(n) {
             currentSlideIdx = n;
             updateSlides();
-            // User interaction resets timer implies we might want to pause or restart logic. 
-            // "sekali di hover dan di klik carouse akan stagnant". 
-            // Since click happens inside the container (usually), it is already paused by mouseenter.
         }
 
         function startSlideShow() {
-            // Run progress bar
             const bar = document.getElementById('progress-fill');
             bar.style.width = '0%';
-            setTimeout(() => { bar.style.width = '100%'; }, 50); // Small delay to allow reset
+            setTimeout(() => { bar.style.width = '100%'; }, 50);
 
             slideInterval = setInterval(() => {
                 if(!isPaused) {
                     nextSlide();
                 }
-            }, 3000); // 3 seconds
+            }, 3000);
         }
 
-        function stopSlideShow() {
-            clearInterval(slideInterval);
-            const bar = document.getElementById('progress-fill');
-            bar.style.width = '0%'; // Reset visual
-        }
-        
         function resetProgressBar() {
-            // Reset animation trick
             const bar = document.getElementById('progress-fill');
             bar.classList.remove('progress-fill');
-            void bar.offsetWidth; // Trigger reflow
+            void bar.offsetWidth;
             bar.classList.add('progress-fill');
             
             if(!isPaused) {
                 bar.style.width = '100%';
             } else {
-                bar.style.width = getComputedStyle(bar).width; // Freeze width? tricky with CSS transition.
-                // Simple approach: just reset to 0 or keep full.
-                // Let's keep it simple: Reset to 0 when changing slide manually
                 bar.style.width = '0%';
                 if(!isPaused) setTimeout(() => { bar.style.width = '100%'; }, 50);
             }
         }
 
-        // Setup Hover/Click Listeners for "Squid Game" effect (Freeze on look)
         const container = document.getElementById('slider-container');
-        
         container.addEventListener('mouseenter', () => {
             isPaused = true;
             document.getElementById('slider-container').classList.add('paused');
         });
-        
         container.addEventListener('mouseleave', () => {
             isPaused = false;
             document.getElementById('slider-container').classList.remove('paused');
-            // Resume progress animation
             resetProgressBar(); 
         });
 
-        // Initialize on load
         window.addEventListener('load', initSlides);
 
 
@@ -563,28 +592,14 @@ Dili\t185\t40\t47`;
         }
 
         function loadSampleParticipants() {
+            // Updated Sample Data: Name | City | Days | Hotel Days | Meal Days | Legs
             const data = 
-`Ahmad Fauzi\tParis\t5\tY\tN
-Sarah Connor\tJakarta\t3\tN\tN
-John Wick\tNew York\t4\tY\tY
-Ratna Sari\tBali\t3\tY\tN
-Budi Doremi\tDili\t10\tY\tY
-Siti Nurhaliza\tBangkok\t4\tN\tN
-Bambang Pamungkas\tJakarta\t2\tY\tY
-Cinta Laura\tNew York\t7\tN\tN
-Deddy Corbuzier\tParis\t5\tY\tN
-Raffi Ahmad\tBali\t3\tY\tY
-Nagita Slavina\tBali\t3\tY\tY
-Joko Anwar\tDili\t6\tN\tN
-Sri Mulyani\tNew York\t5\tY\tN
-Erick Thohir\tBangkok\t3\tY\tN
-Susi Pudjiastuti\tParis\t4\tN\tY
-Raisa Andriana\tJakarta\t2\tY\tN
-Isyana Sarasvati\tJakarta\t2\tN\tN
-Tulus\tDili\t5\tY\tY
-Agnez Mo\tNew York\t10\tY\tN
-Reza Rahadian\tParis\t6\tY\tY
-Angga Conni Saputra\tParis\t7\tY\tN`;
+`Ahmad Fauzi\tParis\t5\t5\t2\t4
+Sarah Connor\tJakarta\t3\t0\t0\t0
+John Wick\tNew York\t4\t4\t4\t4
+Ratna Sari\tBali\t3\tY\t1\t4
+Budi Doremi\tDili\t10\tY\t10\t2
+Siti Nurhaliza\tBangkok\t4\tN\t0\t4`;
             document.getElementById('partInput').value = data;
         }
 
@@ -593,17 +608,27 @@ Angga Conni Saputra\tParis\t7\tY\tN`;
             return text.trim().split('\n').map(line => line.split('\t').map(cell => cell.trim()));
         }
 
-        function parseBoolean(val) {
-            if (!val) return false;
-            val = val.toLowerCase();
-            return val === 'y' || val === 'yes' || val === 'ya' || val === '1' || val === 'true';
+        // Improved Parsers for Foolproof Edition
+        function parseDaysInput(val, totalDays) {
+            if (!val) return 0;
+            // Check for explicit numbers first
+            if (!isNaN(val)) return parseFloat(val);
+            
+            // Check for Yes/No text
+            val = val.toLowerCase().trim();
+            if (val === 'y' || val === 'yes' || val === 'ya' || val === 'true') return totalDays;
+            
+            return 0; // Default N/No/0
+        }
+
+        function parseLegs(val) {
+            if (val === '' || val === undefined) return 4; // Default to 4
+            if (!isNaN(val)) return parseFloat(val);
+            return 4;
         }
 
         function formatCurrency(num, currency = 'USD') {
-            return new Intl.NumberFormat('en-US', { // Changed to EN-US for formatting, but IDR uses 'id-ID' logic usually. 
-                // However, user asked for English US text. Currency format can remain local or become US style.
-                // Keeping IDR format for IDR is standard, but USD should use en-US.
-                // Let's make it smart: if currency is IDR use id-ID, else en-US.
+            return new Intl.NumberFormat('en-US', { 
                 style: 'currency', 
                 currency: currency,
                 minimumFractionDigits: 0,
@@ -613,10 +638,10 @@ Angga Conni Saputra\tParis\t7\tY\tN`;
 
         // --- 3. CORE LOGIC ---
         let calculatedData = [];
-        let globalFloorRuleActive = true; // Track current mode
+        let globalFloorRuleActive = true; 
 
         function processData(useFloorRule = true) {
-            globalFloorRuleActive = useFloorRule; // Save state for export
+            globalFloorRuleActive = useFloorRule; 
             const unore = parseFloat(document.getElementById('unoreRate').value) || 15400;
             const mealPercent = parseFloat(document.getElementById('mealDedRate').value) || 30;
             const incidentalPercent = parseFloat(document.getElementById('incidentalRate').value) || 20;
@@ -658,72 +683,77 @@ Angga Conni Saputra\tParis\t7\tY\tN`;
             partLines.forEach(person => {
                 if(person.length < 2) return;
 
+                // COLUMNS MAPPING
                 const name = person[0];
                 const cityKey = person[1].toLowerCase();
                 const displayCity = person[1];
                 const days = parseFloat(person[2]) || 0;
-                const isHotelProvided = parseBoolean(person[3]);
-                const isMealsProvided = parseBoolean(person[4]);
+                
+                // NEW: Hotel Days (Col 4) & Meal Days (Col 5) & TF Legs (Col 6)
+                const hotelDaysInput = person[3]; 
+                const mealDaysInput = person[4]; 
+                const legsInput = person[5];
+
+                const actualHotelDays = parseDaysInput(hotelDaysInput, days);
+                const actualMealDays = parseDaysInput(mealDaysInput, days);
+                const actualLegs = parseLegs(legsInput);
 
                 const ref = cityMap[cityKey];
                 
                 if (!ref) {
                     const tr = document.createElement('tr');
                     tr.className = "bg-red-50 text-red-600";
-                    tr.innerHTML = `<td colspan="10" class="px-6 py-4">Error: City <strong>${displayCity}</strong> not found.</td>`;
+                    tr.innerHTML = `<td colspan="12" class="px-6 py-4">Error: City <strong>${displayCity}</strong> not found.</td>`;
                     tbody.appendChild(tr);
                     return;
                 }
 
-                // --- LOGIC PERHITUNGAN ---
+                // --- LOGIC PERHITUNGAN UPDATE v2.2 ---
                 
-                // 1. Hitung Komponen DSA
-                const incidentalAmount = ref.dsa * (incidentalPercent / 100);
+                // 1. Gross Calculation
+                const totalIncidental = (ref.dsa * (incidentalPercent / 100)) * days;
                 
-                // 2. Hitung Potongan
-                let roomDeduction = 0;
-                let mealDeduction = 0;
+                // 2. Deductions
+                // Hotel Deduction (Variable Days)
+                const totalRoomDeduction = (ref.dsa * (ref.roomPct / 100)) * actualHotelDays;
 
-                if (isHotelProvided) {
-                    roomDeduction = ref.dsa * (ref.roomPct / 100);
-                }
+                // Meal Deduction (Variable Days)
+                const totalMealDeduction = (ref.dsa * (mealPercent / 100)) * actualMealDays;
 
-                if (isMealsProvided) {
-                    mealDeduction = ref.dsa * (mealPercent / 100);
-                }
+                const totalDeductions = totalRoomDeduction + totalMealDeduction;
 
-                // 3. Kalkulasi Net Daily (Awal)
-                let netDaily = ref.dsa - roomDeduction - mealDeduction;
+                // 3. Net Payable
+                const grossDSA = ref.dsa * days;
+                let netPayable = grossDSA - totalDeductions;
 
-                // 4. Logika Validasi: FLOOR RULE PROTECTION (CONDITIONAL)
+                // 4. Floor Rule Check
                 let isFloorRuleApplied = false;
-                
-                // ONLY Apply if button "With Floor Rule" was clicked
                 if (useFloorRule) {
-                    if (netDaily < incidentalAmount) {
-                        netDaily = incidentalAmount;
+                    if (netPayable < totalIncidental) {
+                        netPayable = totalIncidental;
                         isFloorRuleApplied = true;
                     }
-                } 
-                // Safety net: Money can't be negative even in Raw mode
-                if (netDaily < 0) netDaily = 0;
+                }
+                if (netPayable < 0) netPayable = 0;
 
-                // 5. Final Totals
-                const totalDSA = netDaily * days;
-                const totalTF = ref.tf * 4; 
-                const totalUSD = totalDSA + totalTF;
+                // 5. Terminal Fare
+                const totalTF = ref.tf * actualLegs;
+
+                // 6. Grand Totals
+                const totalUSD = netPayable + totalTF;
                 const totalIDR = totalUSD * unore;
 
                 totalGrandIDR += totalIDR;
 
-                const totalDed = roomDeduction + mealDeduction;
-
                 calculatedData.push({
                     name, displayCity, days, 
                     dsaBase: ref.dsa, 
-                    incidentalVal: incidentalAmount,
-                    deductions: totalDed,
-                    netDaily, totalTF, totalUSD, totalIDR
+                    incidentalVal: (ref.dsa * (incidentalPercent/100)),
+                    totalIncidental,
+                    deductions: totalDeductions,
+                    netPayable, 
+                    totalTF, totalUSD, totalIDR,
+                    actualHotelDays, actualMealDays, actualLegs
                 });
 
                 const tr = document.createElement('tr');
@@ -733,18 +763,19 @@ Angga Conni Saputra\tParis\t7\tY\tN`;
                     <td class="px-4 py-3">${displayCity}</td>
                     <td class="px-4 py-3 text-center"><span class="bg-slate-100 text-slate-600 py-0.5 px-2 rounded text-xs font-bold">${days}</span></td>
                     <td class="px-4 py-3 text-center text-slate-500">$${ref.dsa}</td>
-                    <td class="px-4 py-3 text-center bg-purple-50 text-purple-700 font-medium text-xs">$${incidentalAmount.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-center bg-purple-50 text-purple-700 font-medium text-xs">$${(ref.dsa * incidentalPercent/100).toFixed(2)}<br><span class="text-[9px] text-purple-400">/day</span></td>
+                    <td class="px-4 py-3 text-center font-bold text-blue-700 bg-blue-50 text-xs">${actualHotelDays} <span class="text-[9px] font-normal text-blue-600">days</span></td>
+                    <td class="px-4 py-3 text-center font-bold text-yellow-700 bg-yellow-50 text-xs">${actualMealDays} <span class="text-[9px] font-normal text-yellow-600">days</span></td>
                     <td class="px-4 py-3 text-right text-red-500 text-xs">
-                        -${totalDed > 0 ? totalDed.toFixed(2) : '0'}
-                        ${isHotelProvided ? '<br><span class="text-[9px] text-slate-400">Hotel Prov.</span>' : ''}
-                        ${isMealsProvided ? '<br><span class="text-[9px] text-slate-400">Meals Prov.</span>' : ''}
+                        -${totalDeductions.toFixed(2)}
                     </td>
                     <td class="px-4 py-3 text-right font-mono text-blue-600 font-bold">
-                        $${netDaily.toFixed(2)}
+                        $${netPayable.toFixed(2)}
                         ${isFloorRuleApplied ? '<br><span class="text-[9px] text-orange-500 bg-orange-50 px-1 rounded border border-orange-100">Floor Rule</span>' : ''}
                     </td>
                     <td class="px-4 py-3 text-right text-slate-500 text-xs">
                         $${totalTF}
+                        <br><span class="text-[9px] text-slate-400">(${actualLegs} legs)</span>
                     </td>
                     <td class="px-4 py-3 text-right font-bold text-slate-700">$${totalUSD.toFixed(2)}</td>
                     <td class="px-4 py-3 text-right font-bold text-emerald-600 text-xs">${formatCurrency(totalIDR, 'IDR')}</td>
@@ -797,35 +828,40 @@ Angga Conni Saputra\tParis\t7\tY\tN`;
                 <th>City</th>
                 <th>Days</th>
                 <th>Base DSA ($)</th>
-                <th>Incidental (${incidentalPercent}%)</th>
-                <th>Deductions ($)</th>
-                <th>Net Daily ($)</th>
-                <th>TF ($)</th>
+                <th>Hotel Days</th>
+                <th>Meal Days</th>
+                <th>Legs</th>
+                <th>Total Incidental (${incidentalPercent}%)</th>
+                <th>Total Deductions ($)</th>
+                <th>Net Payable DSA ($)</th>
+                <th>Total TF ($)</th>
                 <th>Total USD</th>
                 <th>Total IDR (Rate: ${unore})</th>
             </tr>`;
 
             // Data Rows with Formula Injection
             calculatedData.forEach((row, index) => {
-                const r = index + 2; // Excel row index (1-based, header is 1)
+                const r = index + 2; // Excel row index
                 
-                // Formulas
-                // Col E: Incidental = D * 0.20
-                const formulaIncidental = `=D${r}*${incidentalPercent/100}`;
+                // Formulas logic update for v2.2
                 
-                // Col G: Net Daily (Logic: MAX(Incidental, Base - Deductions))
-                // Note: Deductions (F) are hardcoded values because they depend on Boolean logic (Hotel Y/N) which is complex to stringify here.
-                // But the Auditor wants to see the Floor Rule logic:
+                // Col H: Total Incidental = (Base * %) * Days
+                const formulaIncidental = `=(D${r}*${incidentalPercent/100})*C${r}`;
+                
+                // Col J: Net Payable = MAX(Total Incidental, (Base*Days) - Deductions)
+                // Note: Logic logic is simplified here using pre-calculated deduction value. 
+                // Creating a string formula for deductions with variable days is complex in Excel HTML without extra helper columns.
+                // We trust the JS deduction calculation for the "Audit" view.
                 const floorLogic = globalFloorRuleActive 
-                    ? `MAX(E${r}, D${r}-F${r})` 
-                    : `MAX(0, D${r}-F${r})`;
-                const formulaNetDaily = `=${floorLogic}`;
+                    ? `MAX(H${r}, (D${r}*C${r})-I${r})` 
+                    : `MAX(0, (D${r}*C${r})-I${r})`;
+                const formulaNetPayable = `=${floorLogic}`;
 
-                // Col I: Total USD = (NetDaily * Days) + TF
-                const formulaTotalUSD = `=(G${r}*C${r})+H${r}`;
+                // Col L: Total USD = NetPayable + TF
+                const formulaTotalUSD = `=J${r}+K${r}`;
 
-                // Col J: Total IDR = TotalUSD * UNORE
-                const formulaTotalIDR = `=I${r}*${unore}`;
+                // Col M: Total IDR
+                const formulaTotalIDR = `=L${r}*${unore}`;
 
                 table += `
                 <tr>
@@ -833,9 +869,12 @@ Angga Conni Saputra\tParis\t7\tY\tN`;
                     <td>${row.displayCity}</td>
                     <td x:num>${row.days}</td>
                     <td x:num>${row.dsaBase}</td>
-                    <td x:num x:fmla="${formulaIncidental}">${row.incidentalVal.toFixed(2)}</td>
+                    <td x:num>${row.actualHotelDays}</td>
+                    <td x:num>${row.actualMealDays}</td>
+                    <td x:num>${row.actualLegs}</td>
+                    <td x:num x:fmla="${formulaIncidental}">${row.totalIncidental.toFixed(2)}</td>
                     <td x:num>${row.deductions.toFixed(2)}</td>
-                    <td x:num x:fmla="${formulaNetDaily}">${row.netDaily.toFixed(2)}</td>
+                    <td x:num x:fmla="${formulaNetPayable}">${row.netPayable.toFixed(2)}</td>
                     <td x:num>${row.totalTF}</td>
                     <td x:num x:fmla="${formulaTotalUSD}">${row.totalUSD.toFixed(2)}</td>
                     <td x:num x:fmla="${formulaTotalIDR}">${row.totalIDR.toFixed(0)}</td>
@@ -844,12 +883,11 @@ Angga Conni Saputra\tParis\t7\tY\tN`;
 
             table += `</table></body></html>`;
 
-            // Download Logic (Blob)
             const blob = new Blob([table], { type: 'application/vnd.ms-excel' });
             const link = document.createElement("a");
             const url = URL.createObjectURL(blob);
             link.href = url;
-            link.download = "UN_Travel_Audit_Report_Formulas.xls"; // Must be .xls for this trick
+            link.download = "UN_Travel_Audit_Report_v2.2.xls";
             document.body.appendChild(link);
             link.click();
             document.body.appendChild(link);

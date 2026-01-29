@@ -73,6 +73,25 @@
             transition: none; /* Stop animation when paused */
             background: #f59e0b; /* Turn orange when paused */
         }
+        /* Modal Animation */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 300ms, transform 300ms;
+        }
+        .modal-exit {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 200ms, transform 200ms;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-20 relative">
@@ -83,10 +102,10 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
                     <i class="ph ph-airplane-tilt text-2xl text-blue-300"></i>
-                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v3.2</span></span>
+                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v3.4</span></span>
                 </div>
                 <div class="text-xs text-blue-200 hidden md:block text-right">
-                    Auto-Calculation Engine v3.2 (Advisory)
+                    Auto-Calculation Engine v3.4 (Reassurance)
                     <div class="font-semibold text-blue-100 mt-0.5">Angga Conni Saputra</div>
                 </div>
             </div>
@@ -105,7 +124,7 @@
                     <div class="col-span-1">
                         <div class="flex justify-between items-center mb-1">
                             <label class="block text-[10px] font-bold text-slate-500 uppercase">Target Currency & UNORE</label>
-                            <!-- NEW: Mixed Currency Advisory -->
+                            <!-- Mixed Currency Advisory -->
                             <button onclick="toggleMixedHelp()" class="text-[9px] text-amber-600 hover:text-amber-800 font-bold bg-amber-50 px-2 py-0.5 rounded cursor-pointer border border-amber-200">
                                 ⚠️ Mixed Group?
                             </button>
@@ -197,15 +216,18 @@
                         </ul>
                     </div>
 
-                    <!-- Slide 2: Deduction Logic -->
+                    <!-- Slide 2: Deduction Logic (CLARIFIED) -->
                     <div class="slide-content hidden-slide" id="slide-1">
                         <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                            <i class="ph ph-function text-green-600"></i> Deduction Logic
+                            <i class="ph ph-scissors text-red-600"></i> Deduction Explained
                         </h3>
                         <div class="text-sm text-blue-800 space-y-2">
-                            <p class="font-semibold text-xs">Provided = Free = Deducted from DSA</p>
-                            <code class="bg-red-50 text-red-700 px-2 py-1 rounded text-xs block border border-red-100">Hotel Ded = Base * Room% * [Provided Days]</code>
-                            <code class="bg-red-50 text-red-700 px-2 py-1 rounded text-xs block border border-red-100">Meal Ded = Base * Meal% * [Provided Days]</code>
+                            <p class="font-semibold text-xs">If Organizer pays -> We deduct from DSA.</p>
+                            <ul class="text-xs list-disc list-inside">
+                                <li>Input <strong>2</strong> in Meal Days = 2 days meals are FREE.</li>
+                                <li>The system will <strong>CUT</strong> 2 days worth of meal allowance.</li>
+                                <li>If staff pays themselves, Input <strong>0</strong> (No Cut).</li>
+                            </ul>
                         </div>
                     </div>
 
@@ -372,9 +394,9 @@
                             </h2>
                             <span id="modeBadge" class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-500 border border-gray-200 font-normal">Mode: Unknown</span>
                             
-                            <!-- Help Button -->
-                            <button onclick="toggleCsvHelp()" class="text-xs flex items-center gap-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full border border-blue-200 transition">
-                                <i class="ph ph-question"></i> Warning?
+                            <!-- Help Button (REASSURING STYLE) -->
+                            <button onclick="toggleCsvHelp()" class="text-xs flex items-center gap-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full border border-blue-200 transition font-semibold">
+                                <i class="ph ph-warning-circle text-lg"></i> Excel Warning?
                             </button>
                         </div>
                         <p class="text-sm text-slate-500 mt-1">DSA Breakdown & Terminal Fare Estimation</p>
@@ -410,7 +432,7 @@
                                 <th class="px-4 py-3 text-right">Deductions</th>
                                 <th class="px-4 py-3 text-right font-bold text-blue-700">Net Payable</th>
                                 <th class="px-4 py-3 text-right">TF ($)</th>
-                                <th class="px-4 py-3 text-right bg-gray-50">Total (Base + TF)</th>
+                                <th class="px-4 py-3 text-right bg-gray-50">Total USD (Ref)</th>
                                 <th class="px-4 py-3 text-right font-bold text-emerald-700" id="headerTotalLocal">Total (Final)</th>
                             </tr>
                         </thead>
@@ -424,7 +446,7 @@
 
     </main>
 
-    <!-- 4. MIXED CURRENCY MODAL (NEW) -->
+    <!-- 4. MIXED CURRENCY MODAL -->
     <div id="mixedHelpModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleMixedHelp()"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -466,43 +488,50 @@
         </div>
     </div>
 
-    <!-- OTHER MODALS (CSV, FORMAT, EMAIL) -->
-    <!-- CSV HELP -->
+    <!-- OTHER MODALS -->
+    <!-- CSV HELP (REASSURING EDITION) -->
     <div id="csvHelpModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleCsvHelp()"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:w-full sm:max-w-lg">
+                    <div class="bg-emerald-50 px-6 py-4 border-b border-emerald-100 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-emerald-900 flex items-center gap-2">
+                            <i class="ph ph-shield-check text-emerald-600"></i> Don't Panic! Excel Safety Guide
+                        </h3>
+                        <button onclick="toggleCsvHelp()" class="text-emerald-400 hover:text-emerald-600 transition"><i class="ph ph-x text-xl"></i></button>
+                    </div>
+
                     <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <i class="ph ph-warning text-yellow-600 text-xl"></i>
+                        <div class="mt-2">
+                            <p class="text-sm text-gray-600 mb-4">
+                                This file is generated using a special method to keep <strong>Formulas Active</strong> without needing a server. Excel doesn't recognize this method, so it shows a standard warning. 
+                                <br><br>
+                                <strong>Rest assured, the file is 100% Safe.</strong>
+                            </p>
+                            
+                            <div class="bg-yellow-50 p-3 rounded-md border border-yellow-200 mb-3">
+                                <h4 class="text-sm font-bold text-yellow-800 flex items-center gap-2"><i class="ph ph-warning-circle"></i> 1. "Format differs..." Warning</h4>
+                                <p class="text-xs text-slate-600 mt-1">This is normal for HTML-based Excel files.</p>
+                                <p class="text-xs font-semibold text-slate-800 mt-1">✅ Action: Click "YES" to open.</p>
                             </div>
-                            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
-                                <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Excel File Opening Guide</h3>
-                                <div class="mt-2">
-                                    <p class="text-sm text-gray-500 mb-4">Since this file is generated using lightweight web technology, Excel will show standard security warnings.</p>
-                                    <div class="bg-yellow-50 p-3 rounded-md border border-yellow-200 mb-3">
-                                        <h4 class="text-sm font-bold text-yellow-800"><i class="ph ph-warning-circle"></i> 1. Format Warning</h4>
-                                        <p class="text-xs text-slate-600 mt-1">Click <strong>"YES"</strong> when asked about file format.</p>
-                                    </div>
-                                    <div class="bg-blue-50 p-3 rounded-md border border-blue-200">
-                                        <h4 class="text-sm font-bold text-blue-800"><i class="ph ph-shield-check"></i> 2. Protected View</h4>
-                                        <p class="text-xs text-slate-600 mt-1">Click <strong>"Enable Editing"</strong> in the yellow bar.</p>
-                                    </div>
-                                </div>
+
+                            <div class="bg-blue-50 p-3 rounded-md border border-blue-200">
+                                <h4 class="text-sm font-bold text-blue-800 flex items-center gap-2"><i class="ph ph-eye"></i> 2. "Protected View"</h4>
+                                <p class="text-xs text-slate-600 mt-1">If the screen is blank/grey.</p>
+                                <p class="text-xs font-semibold text-slate-800 mt-1">✅ Action: Click "Enable Editing" button at the top.</p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                        <button type="button" onclick="toggleCsvHelp()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Got it</button>
+                    <div class="bg-gray-50 px-6 py-4 flex justify-end">
+                        <button type="button" onclick="toggleCsvHelp()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">I Understand, It's Safe</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- FORMAT HELP -->
+    <!-- FORMAT HELP (FOOLPROOF EDITION) -->
     <div id="formatHelpModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleFormatHelp()"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -512,9 +541,10 @@
                         <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-table text-blue-600"></i> Excel Data Format Guide</h3>
                         <button onclick="toggleFormatHelp()" class="text-slate-400 hover:text-slate-600 transition"><i class="ph ph-x text-xl"></i></button>
                     </div>
+                    
                     <div class="p-6 space-y-6">
                         <div>
-                            <h4 class="text-sm font-semibold text-slate-700 mb-2">Required Column Order:</h4>
+                            <h4 class="text-sm font-semibold text-slate-700 mb-2">Required Column Order (Left to Right):</h4>
                             <div class="flex text-xs font-mono border border-slate-300 rounded overflow-hidden">
                                 <div class="bg-slate-100 p-2 border-r w-1/6">1.Name</div>
                                 <div class="bg-slate-100 p-2 border-r w-1/6">2.City</div>
@@ -525,24 +555,30 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 relative">
+                                <span class="absolute top-2 right-2 text-[10px] font-bold text-white bg-red-500 px-1.5 rounded">DEDUCTION</span>
                                 <div class="font-bold text-blue-800 text-sm mb-1">Column 4: Hotel Days</div>
                                 <ul class="list-disc list-inside text-xs text-slate-600 space-y-2">
-                                    <li>Type <strong>Number</strong> (e.g., 3) = Free hotel for 3 days.</li>
-                                    <li>Type <strong>'Y'</strong> = Free hotel for ALL days.</li>
-                                    <li>Type <strong>'0'</strong> = Self-paid (No deduction).</li>
+                                    <li>Type <strong>Number</strong> (e.g., 3) = Organizer PAID for 3 days. <span class="text-red-500 font-bold">(-3 Days Cut)</span></li>
+                                    <li>Type <strong>'Y'</strong> = Organizer PAID EVERYTHING. <span class="text-red-500 font-bold">(Full Cut)</span></li>
+                                    <li>Type <strong>'0'</strong> = Staff paid themselves. <span class="text-green-600 font-bold">(No Cut / Full DSA)</span></li>
                                 </ul>
                             </div>
-                            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100 relative">
+                                <span class="absolute top-2 right-2 text-[10px] font-bold text-white bg-red-500 px-1.5 rounded">DEDUCTION</span>
                                 <div class="font-bold text-yellow-800 text-sm mb-1">Column 5: Meal Days</div>
                                 <ul class="list-disc list-inside text-xs text-slate-600 space-y-2">
-                                    <li>Type <strong>Number</strong> (e.g., 2) = Free meals for 2 days.</li>
-                                    <li>Type <strong>'Y'</strong> = Free meals for ALL days.</li>
-                                    <li>Type <strong>'0'</strong> = Self-paid (No deduction).</li>
+                                    <li>Type <strong>Number</strong> (e.g., 2) = Organizer provided FREE meals for 2 days.</li>
+                                    <li>Type <strong>'Y'</strong> = Full Board provided.</li>
+                                    <li>Type <strong>'0'</strong> = Staff bought their own meals. <span class="text-green-600 font-bold">(Full DSA)</span></li>
                                 </ul>
                             </div>
                         </div>
+                        <div class="text-xs text-slate-500 italic bg-slate-50 p-2 rounded">
+                            * Tip: Copy your data from Excel (exclude headers) and paste it into the "Participant Data" box.
+                        </div>
                     </div>
+                    
                     <div class="bg-slate-50 px-6 py-3 flex justify-end">
                         <button type="button" onclick="toggleFormatHelp()" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">Close Guide</button>
                     </div>
@@ -676,7 +712,7 @@
         container.addEventListener('mouseenter', () => { isPaused = true; document.getElementById('slider-container').classList.add('paused'); });
         container.addEventListener('mouseleave', () => { isPaused = false; document.getElementById('slider-container').classList.remove('paused'); resetProgressBar(); });
 
-        // --- SAMPLE DATA ---
+        // --- SAMPLE DATA (RESTORED TO 11 PAX) ---
         function loadSampleRef() {
             const data = 
 `Jakarta\t4500000\t55\t47
@@ -691,7 +727,14 @@ New York\t450\t65\t90`;
 `Ahmad Fauzi\tParis\t5\t5\t2\t4
 Sarah Connor\tJakarta\t3\t0\t0\t0
 John Wick\tNew York\t4\t4\t4\t4
-Ratna Sari\tBali\t3\tY\t1\t4`;
+Ratna Sari\tBali\t3\tY\t1\t4
+Budi Doremi\tJakarta\t2\tY\t0\t0
+Siti Nurhaliza\tBali\t4\tN\t0\t4
+Jean-Claude\tParis\t5\tY\t3\t4
+Fatima Ahmed\tNew York\t6\tY\t6\t4
+Wei Chen\tBali\t5\tN\t0\t4
+Maria Garcia\tJakarta\t4\tY\t2\t0
+Yuki Tanaka\tParis\t3\tY\t3\t4`;
             document.getElementById('partInput').value = data;
         }
 
@@ -812,7 +855,8 @@ Ratna Sari\tBali\t3\tY\t1\t4`;
                 } else {
                     const tfInTarget = tfInUSD * unore;
                     finalTotal = netPayableBase + tfInTarget;
-                    totalUSD_Display = 0;
+                    // FIX: Calculate Reference USD for Hybrid Mode
+                    totalUSD_Display = finalTotal / unore; 
                 }
 
                 totalGrandFinal += finalTotal;
@@ -822,7 +866,8 @@ Ratna Sari\tBali\t3\tY\t1\t4`;
                     incidentalVal: (dsaBaseVal * (incidentalPercent/100)),
                     totalIncidental, deductions: totalDeductions, netPayableBase, 
                     totalTF_USD: tfInUSD, finalTotal, baseType, targetCurrency,
-                    actualHotelDays, actualMealDays, actualLegs
+                    actualHotelDays, actualMealDays, actualLegs,
+                    refTotalUSD: totalUSD_Display // Store for export
                 });
 
                 let baseSymbol = baseType === 'USD' ? '$' : '';
@@ -839,7 +884,7 @@ Ratna Sari\tBali\t3\tY\t1\t4`;
                     <td class="px-4 py-3 text-right text-red-500 text-xs">-${baseSymbol}${totalDeductions.toFixed(2)}</td>
                     <td class="px-4 py-3 text-right font-mono text-blue-600 font-bold">${baseSymbol}${netPayableBase.toFixed(2)}${isFloorRuleApplied ? '<br><span class="text-[9px] text-orange-500 bg-orange-50 px-1 rounded border border-orange-100">Floor Rule</span>' : ''}</td>
                     <td class="px-4 py-3 text-right text-slate-500 text-xs">$${tfInUSD}<br><span class="text-[9px] text-slate-400">(${actualLegs} legs)</span></td>
-                    <td class="px-4 py-3 text-right bg-gray-50 text-xs text-slate-500">${baseType === 'USD' ? '$' + totalUSD_Display.toFixed(2) : '-'}</td>
+                    <td class="px-4 py-3 text-right bg-gray-50 text-xs text-slate-500">$${totalUSD_Display.toFixed(2)}</td>
                     <td class="px-4 py-3 text-right font-bold text-emerald-600 text-xs">${formatCurrency(finalTotal, targetCurrency)}</td>
                 `;
                 tbody.appendChild(tr);
@@ -864,7 +909,7 @@ Ratna Sari\tBali\t3\tY\t1\t4`;
                 body += `${index + 1}. ${row.name} (${row.displayCity})\n   Days: ${row.days} | Net Base: ${row.netPayableBase.toFixed(2)} | TF: $${row.totalTF_USD}\n   Final: ${formatCurrency(row.finalTotal, currencyCode)}\n\n`;
             });
             if (calculatedData.length > maxRows) body += `... (and ${calculatedData.length - maxRows} more rows. Please see attached Excel)\n\n`;
-            body += `--------------------------------------------------\nGenerated by UN Travel Calculator Engine v3.2`;
+            body += `--------------------------------------------------\nGenerated by UN Travel Calculator Engine v3.4`;
             const subject = `[DSA Calc] ${missionName} - Summary`;
             toggleEmailHelp();
             window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -884,7 +929,7 @@ Ratna Sari\tBali\t3\tY\t1\t4`;
             <head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Sheet1</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
             <style>th { font-weight: bold; background-color: #f3f4f6; border: 1px solid #d1d5db; } td { border: 1px solid #d1d5db; vertical-align: middle; } .header-title { font-size: 14pt; font-weight: bold; text-align: left; border: none; } .header-meta { font-size: 10pt; font-style: italic; text-align: left; border: none; }</style></head><body>
             <table><tr><td colspan="13" class="header-title">${missionName}</td></tr><tr><td colspan="13" class="header-meta">Generated Date: ${reportDate} | UNORE: ${unore} | Target: ${currencyCode} | Base: ${baseType}</td></tr><tr></tr>
-            <tr><th>Name</th><th>City</th><th>Days</th><th>Base DSA (${baseType === 'USD' ? '$' : currencyCode})</th><th>Hotel Days</th><th>Meal Days</th><th>Legs</th><th>Total Incidental (${incidentalPercent}%)</th><th>Total Deductions</th><th>Net Payable (Base)</th><th>Total TF ($)</th><th>Total USD</th><th>Total ${currencyCode} (Rate: ${unore})</th></tr>`;
+            <tr><th>Name</th><th>City</th><th>Days</th><th>Base DSA (${baseType === 'USD' ? '$' : currencyCode})</th><th>Hotel Days</th><th>Meal Days</th><th>Legs</th><th>Total Incidental (${incidentalPercent}%)</th><th>Total Deductions</th><th>Net Payable (Base)</th><th>Total TF ($)</th><th>Total USD (Ref)</th><th>Total ${currencyCode} (Rate: ${unore})</th></tr>`;
 
             calculatedData.forEach((row, index) => {
                 const r = index + 5; 
@@ -892,10 +937,18 @@ Ratna Sari\tBali\t3\tY\t1\t4`;
                 const floorLogic = globalFloorRuleActive ? `MAX(H${r}, (D${r}*C${r})-I${r})` : `MAX(0, (D${r}*C${r})-I${r})`;
                 const formulaNetPayable = `=${floorLogic}`;
                 let formulaFinalTotal = "";
-                if (baseType === 'USD') formulaFinalTotal = `=(J${r}+K${r})*${unore}`;
-                else formulaFinalTotal = `=J${r}+(K${r}*${unore})`;
+                let formulaTotalUSDRef = "";
 
-                table += `<tr><td>${row.name}</td><td>${row.displayCity}</td><td x:num>${row.days}</td><td x:num>${row.dsaBase}</td><td x:num>${row.actualHotelDays}</td><td x:num>${row.actualMealDays}</td><td x:num>${row.actualLegs}</td><td x:num x:fmla="${formulaIncidental}">${row.totalIncidental.toFixed(2)}</td><td x:num>${row.deductions.toFixed(2)}</td><td x:num x:fmla="${formulaNetPayable}">${row.netPayableBase.toFixed(2)}</td><td x:num>${row.totalTF_USD}</td><td x:num x:fmla="${baseType === 'USD' ? `=(J${r}+K${r})` : '0'}">${row.baseType === 'USD' ? row.finalTotal/unore : 0}</td><td x:num x:fmla="${formulaFinalTotal}">${row.finalTotal.toFixed(0)}</td></tr>`;
+                if (baseType === 'USD') {
+                    formulaFinalTotal = `=(J${r}+K${r})*${unore}`;
+                    formulaTotalUSDRef = `=(J${r}+K${r})`; // Simply NetBase + TF
+                } else {
+                    formulaFinalTotal = `=J${r}+(K${r}*${unore})`;
+                    // FIX: Back-calculate USD Reference for Hybrid Mode
+                    formulaTotalUSDRef = `=M${r}/${unore}`; 
+                }
+
+                table += `<tr><td>${row.name}</td><td>${row.displayCity}</td><td x:num>${row.days}</td><td x:num>${row.dsaBase}</td><td x:num>${row.actualHotelDays}</td><td x:num>${row.actualMealDays}</td><td x:num>${row.actualLegs}</td><td x:num x:fmla="${formulaIncidental}">${row.totalIncidental.toFixed(2)}</td><td x:num>${row.deductions.toFixed(2)}</td><td x:num x:fmla="${formulaNetPayable}">${row.netPayableBase.toFixed(2)}</td><td x:num>${row.totalTF_USD}</td><td x:num x:fmla="${formulaTotalUSDRef}">${row.refTotalUSD.toFixed(2)}</td><td x:num x:fmla="${formulaFinalTotal}">${row.finalTotal.toFixed(0)}</td></tr>`;
             });
             table += `</table></body></html>`;
 

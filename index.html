@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UN Travel & DSA Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .scroller::-webkit-scrollbar { width: 8px; height: 8px; }
+        .scroller::-webkit-scrollbar-track { background: #f1f5f9; }
+        .scroller::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .scroller::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Excel-like Header Styling */
+        .excel-header {
+            display: grid;
+            background: #f1f5f9;
+            border-bottom: 1px solid #cbd5e1;
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .excel-cell {
+            padding: 8px 12px;
+            border-right: 1px solid #e2e8f0;
+        }
+        .excel-cell:last-child { border-right: none; }
+
+        /* Slider Transitions */
+        .slide-content {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .hidden-slide {
+            display: none;
+            opacity: 0;
+        }
+        .active-slide {
+            display: block;
+            opacity: 1;
+        }
+        /* Progress bar for auto slide */
+        .progress-bar {
+            height: 3px;
+            background: #cbd5e1;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #3b82f6;
+            width: 0%;
+            transition: width 3s linear;
+        }
+        .paused .progress-fill {
+            transition: none; /* Stop animation when paused */
+            background: #f59e0b; /* Turn orange when paused */
+        }
+        /* Modal Animation */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 300ms, transform 300ms;
+        }
+        .modal-exit {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 200ms, transform 200ms;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-20 relative">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <i class="ph ph-airplane-tilt text-2xl text-blue-300"></i>
+                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition</span></span>
+                </div>
+                <div class="text-xs text-blue-200 hidden md:block text-right">
+                    Auto-Calculation Engine v2.0 (EN)
+                    <div class="font-semibold text-blue-100 mt-0.5">Angga Conni Saputra</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Header Controls (UNORE & Settings) -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- Left Panel: Settings -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 md:col-span-2">
+                <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="ph ph-sliders-horizontal text-lg"></i> Global Variables (Percentage)
+                </h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Current UNORE</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2 text-slate-400">Rp</span>
+                            <input type="number" id="unoreRate" value="15400" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-mono text-right font-bold text-blue-900">
+                        </div>
+                    </div>
+                    <div>
+                        <!-- Spacer -->
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Meal Deduction %</label>
+                        <div class="relative">
+                            <input type="number" id="mealDedRate" value="30" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-mono text-right">
+                            <span class="absolute right-3 top-2 text-slate-400 text-sm">%</span>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1">Standard 3 meals</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-purple-600 mb-1">Incidental %</label>
+                        <div class="relative">
+                            <input type="number" id="incidentalRate" value="20" class="w-full px-3 py-2 border border-purple-200 bg-purple-50 text-purple-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none transition font-mono text-right font-bold">
+                            <span class="absolute right-3 top-2 text-purple-400 text-sm">%</span>
+                        </div>
+                        <p class="text-[10px] text-purple-400 mt-1">Min. Entitlement (Payable)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Info Slideshow (Auto Rotating) -->
+            <div id="slider-container" class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl border border-blue-100 md:col-span-2 flex flex-col justify-between relative overflow-hidden h-full group">
+                
+                <!-- Slide 1: Quick Guide -->
+                <div class="slide-content active-slide" id="slide-0">
+                    <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
+                        <i class="ph ph-info text-blue-600"></i> How to Use
+                    </h3>
+                    <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                        <li>Prepare data in Excel (without headers).</li>
+                        <li><strong>Left:</strong> City Reference Data (DSA Rate, Room %, TF).</li>
+                        <li><strong>Right:</strong> Participant Data (Name, City, Days, Hotel/Meal Status).</li>
+                        <li>Select Calculation Mode (Floor Rule / No Floor Rule).</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 2: Calculation Logic -->
+                <div class="slide-content hidden-slide" id="slide-1">
+                    <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
+                        <i class="ph ph-function text-green-600"></i> Calculation Logic
+                    </h3>
+                    <div class="text-sm text-blue-800 space-y-2">
+                        <p>Basic calculation formula:</p>
+                        <code class="bg-blue-100 px-2 py-1 rounded text-xs block">Net DSA = Base DSA - (Hotel Ded. + Meal Ded.)</code>
+                        <ul class="list-disc list-inside text-xs mt-1 opacity-80">
+                            <li>Hotel Ded. = Base DSA x Room % (if provided)</li>
+                            <li>Meal Ded. = Base DSA x Meal % (if provided)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Floor Rule -->
+                <div class="slide-content hidden-slide" id="slide-2">
+                    <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
+                        <i class="ph ph-shield-check text-orange-600"></i> Floor Rule Policy
+                    </h3>
+                    <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                        <li><strong>Incidentals (15-20%)</strong> are the staff's minimum entitlement.</li>
+                        <li>If active, the system guarantees staff receive at least the Incidental portion even if deductions are high.</li>
+                        <li>Turn this off (Grey Button) to view raw mathematical values.</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 4: Pro Tips -->
+                <div class="slide-content hidden-slide" id="slide-3">
+                    <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
+                        <i class="ph ph-lightbulb text-yellow-500"></i> Tips & Tricks
+                    </h3>
+                    <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                        <li>Use <strong>"No Floor Rule"</strong> to audit worst-case budgets.</li>
+                        <li>Double-check the <strong>"Room %"</strong> column in ICSC monthly, it fluctuates.</li>
+                        <li>Paris TF often differs from Global Rate ($47), ensure manual input.</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 5: External Link -->
+                <div class="slide-content hidden-slide" id="slide-4">
+                    <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
+                        <i class="ph ph-globe text-purple-600"></i> Official Data Source
+                    </h3>
+                    <p class="text-sm text-blue-800 mb-4">
+                        Always verify latest DSA & Room Rates via the official International Civil Service Commission (ICSC) website.
+                    </p>
+                    <a href="https://icsc.un.org/" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                        Open ICSC Website <i class="ph ph-arrow-square-out"></i>
+                    </a>
+                </div>
+
+                <!-- Slider Controls -->
+                <div class="flex justify-between items-center mt-4 pt-4 border-t border-blue-100 z-10">
+                    <div class="flex gap-1" id="dots-container">
+                        <!-- Dots generated by JS -->
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="prevSlide()" class="p-1 rounded hover:bg-blue-100 text-blue-600 transition"><i class="ph ph-caret-left text-xl"></i></button>
+                        <button onclick="nextSlide()" class="p-1 rounded hover:bg-blue-100 text-blue-600 transition"><i class="ph ph-caret-right text-xl"></i></button>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Input Area -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- REFERENCE DATA INPUT -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[450px]">
+                <div class="p-3 bg-slate-100 border-b border-slate-200 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                            <i class="ph ph-database text-blue-600"></i> Reference Data (ICSC)
+                        </h3>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Copy from Excel (no header) & Paste below</p>
+                    </div>
+                    <button onclick="loadSampleRef()" class="text-[10px] bg-white border border-slate-300 px-2 py-1 rounded hover:bg-slate-50 text-slate-600 shadow-sm">Load Sample</button>
+                </div>
+                
+                <div class="excel-header" style="grid-template-columns: 2fr 1fr 1fr 1fr;">
+                    <div class="excel-cell">City</div>
+                    <div class="excel-cell text-center">DSA ($)</div>
+                    <div class="excel-cell text-center">Room (%)</div>
+                    <div class="excel-cell text-center">TF ($)</div>
+                </div>
+
+                <div class="relative flex-1 group">
+                    <textarea id="refInput" class="w-full h-full p-4 font-mono text-xs focus:outline-none resize-none bg-slate-50/30 group-hover:bg-white transition-colors" placeholder="Format example:&#10;Paris	400	60	70&#10;Jakarta	230	55	47&#10;... (Paste your data here)"></textarea>
+                </div>
+            </div>
+
+            <!-- PARTICIPANT DATA INPUT -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[450px]">
+                <div class="p-3 bg-slate-100 border-b border-slate-200 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                            <i class="ph ph-users text-green-600"></i> Participant Data
+                        </h3>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Copy from Excel (no header) & Paste below</p>
+                    </div>
+                    <button onclick="loadSampleParticipants()" class="text-[10px] bg-white border border-slate-300 px-2 py-1 rounded hover:bg-slate-50 text-slate-600 shadow-sm">Load Sample</button>
+                </div>
+
+                <div class="excel-header" style="grid-template-columns: 2fr 1.5fr 0.8fr 1fr 1fr;">
+                    <div class="excel-cell">Participant Name</div>
+                    <div class="excel-cell">Destination</div>
+                    <div class="excel-cell text-center">Days</div>
+                    <div class="excel-cell text-center">Hotel?</div>
+                    <div class="excel-cell text-center">Meals?</div>
+                </div>
+
+                <div class="relative flex-1 group">
+                    <textarea id="partInput" class="w-full h-full p-4 font-mono text-xs focus:outline-none resize-none bg-slate-50/30 group-hover:bg-white transition-colors" placeholder="Format example:&#10;Ahmad	Paris	5	Y	N&#10;Sarah	Jakarta	3	N	N&#10;... (Paste your data here)"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons (DUAL MODE) -->
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <button onclick="processData(true)" class="group bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-3 transform hover:-translate-y-1">
+                <i class="ph ph-shield-check text-2xl group-hover:scale-110 transition-transform"></i>
+                Calculate with Floor Rule
+                <span class="text-[10px] bg-blue-500 text-white px-1.5 py-0.5 rounded ml-1">Safe</span>
+            </button>
+            
+            <button onclick="processData(false)" class="group bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-semibold py-3 px-8 rounded-xl shadow hover:shadow-md transition-all flex items-center gap-3 transform hover:-translate-y-1 border border-slate-300">
+                <i class="ph ph-calculator text-2xl group-hover:rotate-12 transition-transform text-slate-500"></i>
+                Calculate without Floor Rule
+                <span class="text-[10px] bg-slate-300 text-slate-600 px-1.5 py-0.5 rounded ml-1">Raw</span>
+            </button>
+        </div>
+
+        <!-- RESULTS SECTION -->
+        <section id="resultSection" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                Calculation Report
+                            </h2>
+                            <span id="modeBadge" class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-500 border border-gray-200 font-normal">Mode: Unknown</span>
+                            
+                            <!-- NEW BUTTON: Help for Excel -->
+                            <button onclick="toggleCsvHelp()" class="text-xs flex items-center gap-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full border border-blue-200 transition">
+                                <i class="ph ph-question"></i> Why the Warning?
+                            </button>
+                        </div>
+                        <p class="text-sm text-slate-500 mt-1">DSA Breakdown & Terminal Fare Estimation</p>
+                    </div>
+                    <div class="flex gap-3 items-center">
+                         <div class="text-right mr-4">
+                            <div class="text-xs text-slate-400">Total Payout (Est.)</div>
+                            <div class="font-bold text-lg text-emerald-600" id="grandTotalDisplay">IDR 0</div>
+                        </div>
+                        <button onclick="exportToExcelWithFormulas()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition shadow-md">
+                            <i class="ph ph-file-xls text-lg"></i> Export Excel (Audit Ready)
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto scroller">
+                    <table class="w-full text-sm text-left whitespace-nowrap">
+                        <thead class="bg-slate-50 text-slate-500 font-medium border-b border-slate-200">
+                            <tr>
+                                <th class="px-4 py-3">Name</th>
+                                <th class="px-4 py-3">City</th>
+                                <th class="px-4 py-3 text-center">Days</th>
+                                <th class="px-4 py-3 text-center">Base DSA</th>
+                                <th class="px-4 py-3 text-center text-purple-600 bg-purple-50">Incidental ($)</th>
+                                <th class="px-4 py-3 text-right">Deductions</th>
+                                <th class="px-4 py-3 text-right font-bold text-blue-700">Net Daily ($)</th>
+                                <th class="px-4 py-3 text-right">TF ($)</th>
+                                <th class="px-4 py-3 text-right bg-gray-50">Total USD</th>
+                                <th class="px-4 py-3 text-right font-bold text-emerald-700">Total IDR</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultBody" class="divide-y divide-slate-100">
+                            <!-- Rows generated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- HELP MODAL (UPDATED FOR EXCEL WARNINGS - ENGLISH) -->
+    <div id="csvHelpModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Background backdrop -->
+        <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleCsvHelp()"></div>
+
+        <!-- Modal panel -->
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                    <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
+                                <i class="ph ph-warning text-yellow-600 text-xl"></i>
+                            </div>
+                            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+                                <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Excel File Opening Guide</h3>
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-500 mb-4">
+                                        Since this file is generated using lightweight web technology (no server), Excel will show standard security warnings. This is normal and safe.
+                                    </p>
+                                    
+                                    <div class="bg-yellow-50 p-3 rounded-md border border-yellow-200 mb-3">
+                                        <h4 class="text-sm font-bold text-yellow-800 flex items-center gap-2">
+                                            <i class="ph ph-warning-circle"></i> 1. Format Warning Appears
+                                        </h4>
+                                        <p class="text-xs text-slate-600 mt-1">
+                                            Excel will show: <em>"The file format and extension don't match..."</em>
+                                        </p>
+                                        <p class="text-xs font-semibold text-slate-800 mt-1">
+                                            ✅ Solution: Click "YES".
+                                        </p>
+                                        <p class="text-[10px] text-slate-500 mt-1">
+                                            (This file is safe, it only contains calculation tables).
+                                        </p>
+                                    </div>
+
+                                    <div class="bg-blue-50 p-3 rounded-md border border-blue-200">
+                                        <h4 class="text-sm font-bold text-blue-800 flex items-center gap-2">
+                                            <i class="ph ph-shield-check"></i> 2. Blank Screen / Protected View
+                                        </h4>
+                                        <p class="text-xs text-slate-600 mt-1">
+                                            If the screen looks blank or gray, Excel is in "Protected View".
+                                        </p>
+                                        <p class="text-xs font-semibold text-slate-800 mt-1">
+                                            ✅ Solution: Click "Enable Editing" in the yellow top bar.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button type="button" onclick="toggleCsvHelp()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Got it, Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Logic -->
+    <script>
+        // --- 0. HELP MODAL LOGIC ---
+        function toggleCsvHelp() {
+            const modal = document.getElementById('csvHelpModal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // --- 1. SLIDESHOW LOGIC (AUTO ROTATE + HOVER PAUSE) ---
+        let currentSlideIdx = 0;
+        const totalSlides = 5; // Updated to 5 slides
+        let slideInterval;
+        let isPaused = false;
+
+        function initSlides() {
+            // Generate dots dynamically based on totalSlides
+            const dotsContainer = document.getElementById('dots-container');
+            dotsContainer.innerHTML = '';
+            for(let i=0; i<totalSlides; i++) {
+                const dot = document.createElement('button');
+                dot.onclick = () => { setSlide(i); };
+                dot.className = `h-2 rounded-full transition-all ${i===0 ? 'bg-blue-600 w-4' : 'bg-blue-200 w-2'}`;
+                dot.id = `dot-${i}`;
+                dotsContainer.appendChild(dot);
+            }
+            startSlideShow();
+        }
+
+        function updateSlides() {
+            // Update visibility
+            for (let i = 0; i < totalSlides; i++) {
+                const el = document.getElementById(`slide-${i}`);
+                if (el) {
+                    if (i === currentSlideIdx) {
+                        el.classList.remove('hidden-slide');
+                        el.classList.add('active-slide');
+                    } else {
+                        el.classList.add('hidden-slide');
+                        el.classList.remove('active-slide');
+                    }
+                }
+            }
+            // Update dots
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                if (dot) {
+                    if (i === currentSlideIdx) {
+                        dot.classList.remove('bg-blue-200', 'w-2');
+                        dot.classList.add('bg-blue-600', 'w-4');
+                    } else {
+                        dot.classList.add('bg-blue-200', 'w-2');
+                        dot.classList.remove('bg-blue-600', 'w-4');
+                    }
+                }
+            }
+            // Reset Progress Bar Animation
+            resetProgressBar();
+        }
+
+        function nextSlide() {
+            currentSlideIdx = (currentSlideIdx + 1) % totalSlides;
+            updateSlides();
+        }
+
+        function prevSlide() {
+            currentSlideIdx = (currentSlideIdx - 1 + totalSlides) % totalSlides;
+            updateSlides();
+        }
+
+        function setSlide(n) {
+            currentSlideIdx = n;
+            updateSlides();
+            // User interaction resets timer implies we might want to pause or restart logic. 
+            // "sekali di hover dan di klik carouse akan stagnant". 
+            // Since click happens inside the container (usually), it is already paused by mouseenter.
+        }
+
+        function startSlideShow() {
+            // Run progress bar
+            const bar = document.getElementById('progress-fill');
+            bar.style.width = '0%';
+            setTimeout(() => { bar.style.width = '100%'; }, 50); // Small delay to allow reset
+
+            slideInterval = setInterval(() => {
+                if(!isPaused) {
+                    nextSlide();
+                }
+            }, 3000); // 3 seconds
+        }
+
+        function stopSlideShow() {
+            clearInterval(slideInterval);
+            const bar = document.getElementById('progress-fill');
+            bar.style.width = '0%'; // Reset visual
+        }
+        
+        function resetProgressBar() {
+            // Reset animation trick
+            const bar = document.getElementById('progress-fill');
+            bar.classList.remove('progress-fill');
+            void bar.offsetWidth; // Trigger reflow
+            bar.classList.add('progress-fill');
+            
+            if(!isPaused) {
+                bar.style.width = '100%';
+            } else {
+                bar.style.width = getComputedStyle(bar).width; // Freeze width? tricky with CSS transition.
+                // Simple approach: just reset to 0 or keep full.
+                // Let's keep it simple: Reset to 0 when changing slide manually
+                bar.style.width = '0%';
+                if(!isPaused) setTimeout(() => { bar.style.width = '100%'; }, 50);
+            }
+        }
+
+        // Setup Hover/Click Listeners for "Squid Game" effect (Freeze on look)
+        const container = document.getElementById('slider-container');
+        
+        container.addEventListener('mouseenter', () => {
+            isPaused = true;
+            document.getElementById('slider-container').classList.add('paused');
+        });
+        
+        container.addEventListener('mouseleave', () => {
+            isPaused = false;
+            document.getElementById('slider-container').classList.remove('paused');
+            // Resume progress animation
+            resetProgressBar(); 
+        });
+
+        // Initialize on load
+        window.addEventListener('load', initSlides);
+
+
+        // --- 1. SAMPLE DATA ---
+        function loadSampleRef() {
+            const data = 
+`Paris\t400\t60\t70
+Jakarta\t238\t55\t47
+Bali\t190\t45\t47
+New York\t450\t65\t90
+Bangkok\t210\t50\t47
+Dili\t185\t40\t47`;
+            document.getElementById('refInput').value = data;
+        }
+
+        function loadSampleParticipants() {
+            const data = 
+`Ahmad Fauzi\tParis\t5\tY\tN
+Sarah Connor\tJakarta\t3\tN\tN
+John Wick\tNew York\t4\tY\tY
+Ratna Sari\tBali\t3\tY\tN
+Budi Doremi\tDili\t10\tY\tY
+Siti Nurhaliza\tBangkok\t4\tN\tN
+Bambang Pamungkas\tJakarta\t2\tY\tY
+Cinta Laura\tNew York\t7\tN\tN
+Deddy Corbuzier\tParis\t5\tY\tN
+Raffi Ahmad\tBali\t3\tY\tY
+Nagita Slavina\tBali\t3\tY\tY
+Joko Anwar\tDili\t6\tN\tN
+Sri Mulyani\tNew York\t5\tY\tN
+Erick Thohir\tBangkok\t3\tY\tN
+Susi Pudjiastuti\tParis\t4\tN\tY
+Raisa Andriana\tJakarta\t2\tY\tN
+Isyana Sarasvati\tJakarta\t2\tN\tN
+Tulus\tDili\t5\tY\tY
+Agnez Mo\tNew York\t10\tY\tN
+Reza Rahadian\tParis\t6\tY\tY
+Angga Conni Saputra\tParis\t7\tY\tN`;
+            document.getElementById('partInput').value = data;
+        }
+
+        // --- 2. UTILS ---
+        function parseTSV(text) {
+            return text.trim().split('\n').map(line => line.split('\t').map(cell => cell.trim()));
+        }
+
+        function parseBoolean(val) {
+            if (!val) return false;
+            val = val.toLowerCase();
+            return val === 'y' || val === 'yes' || val === 'ya' || val === '1' || val === 'true';
+        }
+
+        function formatCurrency(num, currency = 'USD') {
+            return new Intl.NumberFormat('en-US', { // Changed to EN-US for formatting, but IDR uses 'id-ID' logic usually. 
+                // However, user asked for English US text. Currency format can remain local or become US style.
+                // Keeping IDR format for IDR is standard, but USD should use en-US.
+                // Let's make it smart: if currency is IDR use id-ID, else en-US.
+                style: 'currency', 
+                currency: currency,
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            }).format(num);
+        }
+
+        // --- 3. CORE LOGIC ---
+        let calculatedData = [];
+        let globalFloorRuleActive = true; // Track current mode
+
+        function processData(useFloorRule = true) {
+            globalFloorRuleActive = useFloorRule; // Save state for export
+            const unore = parseFloat(document.getElementById('unoreRate').value) || 15400;
+            const mealPercent = parseFloat(document.getElementById('mealDedRate').value) || 30;
+            const incidentalPercent = parseFloat(document.getElementById('incidentalRate').value) || 20;
+
+            const refRaw = document.getElementById('refInput').value;
+            const refLines = parseTSV(refRaw);
+            
+            const cityMap = {};
+            refLines.forEach(line => {
+                if(line.length >= 2) {
+                    const cityKey = line[0].toLowerCase();
+                    cityMap[cityKey] = {
+                        dsa: parseFloat(line[1]) || 0,
+                        roomPct: parseFloat(line[2]) || 50,
+                        tf: parseFloat(line[3]) || 47
+                    };
+                }
+            });
+
+            const partRaw = document.getElementById('partInput').value;
+            const partLines = parseTSV(partRaw);
+
+            calculatedData = [];
+            let totalGrandIDR = 0;
+
+            const tbody = document.getElementById('resultBody');
+            tbody.innerHTML = '';
+
+            // Update Mode Badge
+            const badge = document.getElementById('modeBadge');
+            if(useFloorRule) {
+                badge.innerText = "Mode: With Floor Rule (Safe)";
+                badge.className = "text-xs px-2 py-1 rounded bg-blue-100 text-blue-700 border border-blue-200 font-medium ml-2";
+            } else {
+                badge.innerText = "Mode: Without Floor Rule (Raw)";
+                badge.className = "text-xs px-2 py-1 rounded bg-slate-200 text-slate-700 border border-slate-300 font-medium ml-2";
+            }
+
+            partLines.forEach(person => {
+                if(person.length < 2) return;
+
+                const name = person[0];
+                const cityKey = person[1].toLowerCase();
+                const displayCity = person[1];
+                const days = parseFloat(person[2]) || 0;
+                const isHotelProvided = parseBoolean(person[3]);
+                const isMealsProvided = parseBoolean(person[4]);
+
+                const ref = cityMap[cityKey];
+                
+                if (!ref) {
+                    const tr = document.createElement('tr');
+                    tr.className = "bg-red-50 text-red-600";
+                    tr.innerHTML = `<td colspan="10" class="px-6 py-4">Error: City <strong>${displayCity}</strong> not found.</td>`;
+                    tbody.appendChild(tr);
+                    return;
+                }
+
+                // --- LOGIC PERHITUNGAN ---
+                
+                // 1. Hitung Komponen DSA
+                const incidentalAmount = ref.dsa * (incidentalPercent / 100);
+                
+                // 2. Hitung Potongan
+                let roomDeduction = 0;
+                let mealDeduction = 0;
+
+                if (isHotelProvided) {
+                    roomDeduction = ref.dsa * (ref.roomPct / 100);
+                }
+
+                if (isMealsProvided) {
+                    mealDeduction = ref.dsa * (mealPercent / 100);
+                }
+
+                // 3. Kalkulasi Net Daily (Awal)
+                let netDaily = ref.dsa - roomDeduction - mealDeduction;
+
+                // 4. Logika Validasi: FLOOR RULE PROTECTION (CONDITIONAL)
+                let isFloorRuleApplied = false;
+                
+                // ONLY Apply if button "With Floor Rule" was clicked
+                if (useFloorRule) {
+                    if (netDaily < incidentalAmount) {
+                        netDaily = incidentalAmount;
+                        isFloorRuleApplied = true;
+                    }
+                } 
+                // Safety net: Money can't be negative even in Raw mode
+                if (netDaily < 0) netDaily = 0;
+
+                // 5. Final Totals
+                const totalDSA = netDaily * days;
+                const totalTF = ref.tf * 4; 
+                const totalUSD = totalDSA + totalTF;
+                const totalIDR = totalUSD * unore;
+
+                totalGrandIDR += totalIDR;
+
+                const totalDed = roomDeduction + mealDeduction;
+
+                calculatedData.push({
+                    name, displayCity, days, 
+                    dsaBase: ref.dsa, 
+                    incidentalVal: incidentalAmount,
+                    deductions: totalDed,
+                    netDaily, totalTF, totalUSD, totalIDR
+                });
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-medium text-slate-900">${name}</td>
+                    <td class="px-4 py-3">${displayCity}</td>
+                    <td class="px-4 py-3 text-center"><span class="bg-slate-100 text-slate-600 py-0.5 px-2 rounded text-xs font-bold">${days}</span></td>
+                    <td class="px-4 py-3 text-center text-slate-500">$${ref.dsa}</td>
+                    <td class="px-4 py-3 text-center bg-purple-50 text-purple-700 font-medium text-xs">$${incidentalAmount.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-right text-red-500 text-xs">
+                        -${totalDed > 0 ? totalDed.toFixed(2) : '0'}
+                        ${isHotelProvided ? '<br><span class="text-[9px] text-slate-400">Hotel Prov.</span>' : ''}
+                        ${isMealsProvided ? '<br><span class="text-[9px] text-slate-400">Meals Prov.</span>' : ''}
+                    </td>
+                    <td class="px-4 py-3 text-right font-mono text-blue-600 font-bold">
+                        $${netDaily.toFixed(2)}
+                        ${isFloorRuleApplied ? '<br><span class="text-[9px] text-orange-500 bg-orange-50 px-1 rounded border border-orange-100">Floor Rule</span>' : ''}
+                    </td>
+                    <td class="px-4 py-3 text-right text-slate-500 text-xs">
+                        $${totalTF}
+                    </td>
+                    <td class="px-4 py-3 text-right font-bold text-slate-700">$${totalUSD.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-right font-bold text-emerald-600 text-xs">${formatCurrency(totalIDR, 'IDR')}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('grandTotalDisplay').innerText = formatCurrency(totalGrandIDR, 'IDR');
+            document.getElementById('resultSection').classList.remove('hidden');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- 4. EXPORT EXCEL WITH FORMULAS (AUDIT READY) ---
+        function exportToExcelWithFormulas() {
+            if (calculatedData.length === 0) {
+                alert("Please calculate data first!");
+                return;
+            }
+
+            const unore = parseFloat(document.getElementById('unoreRate').value) || 15400;
+            const incidentalPercent = parseFloat(document.getElementById('incidentalRate').value) || 20;
+
+            // Define Table Header
+            let table = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+            <head>
+                <!--[if gte mso 9]>
+                <xml>
+                <x:ExcelWorkbook>
+                <x:ExcelWorksheets>
+                <x:ExcelWorksheet>
+                <x:Name>UN Travel Audit Report</x:Name>
+                <x:WorksheetOptions>
+                <x:DisplayGridlines/>
+                </x:WorksheetOptions>
+                </x:ExcelWorksheet>
+                </x:ExcelWorksheets>
+                </x:ExcelWorkbook>
+                </xml>
+                <![endif]-->
+                <style>
+                    th { font-weight: bold; background-color: #f3f4f6; border: 1px solid #d1d5db; }
+                    td { border: 1px solid #d1d5db; vertical-align: middle; }
+                </style>
+            </head>
+            <body>
+            <table>
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>Days</th>
+                <th>Base DSA ($)</th>
+                <th>Incidental (${incidentalPercent}%)</th>
+                <th>Deductions ($)</th>
+                <th>Net Daily ($)</th>
+                <th>TF ($)</th>
+                <th>Total USD</th>
+                <th>Total IDR (Rate: ${unore})</th>
+            </tr>`;
+
+            // Data Rows with Formula Injection
+            calculatedData.forEach((row, index) => {
+                const r = index + 2; // Excel row index (1-based, header is 1)
+                
+                // Formulas
+                // Col E: Incidental = D * 0.20
+                const formulaIncidental = `=D${r}*${incidentalPercent/100}`;
+                
+                // Col G: Net Daily (Logic: MAX(Incidental, Base - Deductions))
+                // Note: Deductions (F) are hardcoded values because they depend on Boolean logic (Hotel Y/N) which is complex to stringify here.
+                // But the Auditor wants to see the Floor Rule logic:
+                const floorLogic = globalFloorRuleActive 
+                    ? `MAX(E${r}, D${r}-F${r})` 
+                    : `MAX(0, D${r}-F${r})`;
+                const formulaNetDaily = `=${floorLogic}`;
+
+                // Col I: Total USD = (NetDaily * Days) + TF
+                const formulaTotalUSD = `=(G${r}*C${r})+H${r}`;
+
+                // Col J: Total IDR = TotalUSD * UNORE
+                const formulaTotalIDR = `=I${r}*${unore}`;
+
+                table += `
+                <tr>
+                    <td>${row.name}</td>
+                    <td>${row.displayCity}</td>
+                    <td x:num>${row.days}</td>
+                    <td x:num>${row.dsaBase}</td>
+                    <td x:num x:fmla="${formulaIncidental}">${row.incidentalVal.toFixed(2)}</td>
+                    <td x:num>${row.deductions.toFixed(2)}</td>
+                    <td x:num x:fmla="${formulaNetDaily}">${row.netDaily.toFixed(2)}</td>
+                    <td x:num>${row.totalTF}</td>
+                    <td x:num x:fmla="${formulaTotalUSD}">${row.totalUSD.toFixed(2)}</td>
+                    <td x:num x:fmla="${formulaTotalIDR}">${row.totalIDR.toFixed(0)}</td>
+                </tr>`;
+            });
+
+            table += `</table></body></html>`;
+
+            // Download Logic (Blob)
+            const blob = new Blob([table], { type: 'application/vnd.ms-excel' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = "UN_Travel_Audit_Report_Formulas.xls"; // Must be .xls for this trick
+            document.body.appendChild(link);
+            link.click();
+            document.body.appendChild(link);
+        }
+        
+    </script>
+</body>
+</html>

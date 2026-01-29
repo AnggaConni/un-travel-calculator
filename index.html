@@ -73,25 +73,6 @@
             transition: none; /* Stop animation when paused */
             background: #f59e0b; /* Turn orange when paused */
         }
-        /* Modal Animation */
-        .modal-enter {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-        .modal-enter-active {
-            opacity: 1;
-            transform: scale(1);
-            transition: opacity 300ms, transform 300ms;
-        }
-        .modal-exit {
-            opacity: 1;
-            transform: scale(1);
-        }
-        .modal-exit-active {
-            opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 200ms, transform 200ms;
-        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-20 relative">
@@ -102,10 +83,10 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
                     <i class="ph ph-airplane-tilt text-2xl text-blue-300"></i>
-                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v2.9</span></span>
+                    <span class="font-bold text-xl tracking-tight">UN Travel Calculator <span class="text-blue-300 text-sm font-normal">Audit Edition v3.0</span></span>
                 </div>
                 <div class="text-xs text-blue-200 hidden md:block text-right">
-                    Auto-Calculation Engine v2.9 (Email Fix)
+                    Auto-Calculation Engine v3.0 (Clarified Logic)
                     <div class="font-semibold text-blue-100 mt-0.5">Angga Conni Saputra</div>
                 </div>
             </div>
@@ -183,7 +164,6 @@
                         <div class="col-span-4 relative group">
                             <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase flex items-center gap-1 cursor-help">
                                 <i class="ph ph-envelope-simple"></i> Email (Optional)
-                                <!-- INFO BUTTON FOR EMAIL -->
                                 <button onclick="toggleEmailHelp()" class="text-blue-400 hover:text-blue-600 transition">
                                     <i class="ph ph-info"></i>
                                 </button>
@@ -200,27 +180,27 @@
                 <!-- STABILIZER WRAPPER (Min Height) -->
                 <div class="min-h-[180px] flex flex-col justify-center">
                     
-                    <!-- Slide 1: Quick Guide -->
+                    <!-- Slide 1: Quick Guide (UPDATED) -->
                     <div class="slide-content active-slide" id="slide-0">
                         <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                            <i class="ph ph-info text-blue-600"></i> New Feature: Hotel Days
+                            <i class="ph ph-info text-blue-600"></i> New Feature: Deduction Inputs
                         </h3>
                         <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                            <li><strong>Flexible Hotel Input:</strong> Specify <em>how many days</em> the hotel is provided.</li>
-                            <li><strong>'Y' or 'Yes'</strong> = Automatically calculates for ALL mission days.</li>
-                            <li><strong>Number (e.g., 3)</strong> = Calculates deduction for exactly 3 days.</li>
+                            <li><strong>Clarification:</strong> The columns "Hotel Days" and "Meal Days" are for <strong>DEDUCTIONS</strong>.</li>
+                            <li><strong>Input Rule:</strong> Enter the number of days where meals/hotel were provided <strong>FREE by Organizer</strong>.</li>
+                            <li>If participant pays themselves, type <strong>0</strong> (No deduction).</li>
                         </ul>
                     </div>
 
-                    <!-- Slide 2: Calculation Logic -->
+                    <!-- Slide 2: Calculation Logic (UPDATED) -->
                     <div class="slide-content hidden-slide" id="slide-1">
                         <h3 class="text-blue-900 font-bold text-lg mb-2 flex items-center gap-2">
-                            <i class="ph ph-function text-green-600"></i> Logic Update v2.2
+                            <i class="ph ph-function text-green-600"></i> Deduction Logic
                         </h3>
                         <div class="text-sm text-blue-800 space-y-2">
-                            <code class="bg-blue-100 px-2 py-1 rounded text-xs block">Hotel Ded = Base DSA * Room% * [Hotel Days]</code>
-                            <code class="bg-blue-100 px-2 py-1 rounded text-xs block">Meal Ded = Base DSA * Meal% * [Meal Days]</code>
-                            <p class="text-xs text-slate-600">Calculations are now precise per component day.</p>
+                            <p class="font-semibold text-xs">Provided = Free = Deducted from DSA</p>
+                            <code class="bg-red-50 text-red-700 px-2 py-1 rounded text-xs block border border-red-100">Hotel Ded = Base * Room% * [Provided Days]</code>
+                            <code class="bg-red-50 text-red-700 px-2 py-1 rounded text-xs block border border-red-100">Meal Ded = Base * Meal% * [Provided Days]</code>
                         </div>
                     </div>
 
@@ -231,7 +211,7 @@
                         </h3>
                         <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
                             <li><strong>Incidentals (15-20%)</strong> are the staff's minimum entitlement.</li>
-                            <li>If active, the system guarantees staff receive at least the Incidental portion even if deductions are high.</li>
+                            <li>If active, the system guarantees staff receive at least the Incidental portion even if deductions are high (Full Board).</li>
                         </ul>
                     </div>
 
@@ -340,8 +320,8 @@
                     <div class="excel-cell">Name</div>
                     <div class="excel-cell">City</div>
                     <div class="excel-cell text-center">Days</div>
-                    <div class="excel-cell text-center">Hotel Days</div>
-                    <div class="excel-cell text-center">Meal Days</div>
+                    <div class="excel-cell text-center text-xs">Hotel (Ded)</div>
+                    <div class="excel-cell text-center text-xs">Meal (Ded)</div>
                     <div class="excel-cell text-center">Legs</div>
                 </div>
 
@@ -391,7 +371,6 @@
                         </div>
                         <!-- BUTTON GROUP: EMAIL & EXCEL -->
                         <div class="flex gap-2">
-                            <!-- UPDATE: Call toggleEmailHelp instead of sendEmailReport directly -->
                             <button onclick="toggleEmailHelp()" class="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition shadow-md" title="Email Summary">
                                 <i class="ph ph-paper-plane-tilt text-lg"></i>
                             </button>
@@ -411,8 +390,8 @@
                                 <th class="px-4 py-3 text-center">Days</th>
                                 <th class="px-4 py-3 text-center">Base DSA</th>
                                 <th class="px-4 py-3 text-center text-purple-600 bg-purple-50">Incidental ($)</th>
-                                <th class="px-4 py-3 text-center bg-blue-50 text-blue-800">Hotel Days</th>
-                                <th class="px-4 py-3 text-center bg-yellow-50 text-yellow-800">Meal Days</th>
+                                <th class="px-4 py-3 text-center bg-blue-50 text-blue-800">Hotel Days (Ded)</th>
+                                <th class="px-4 py-3 text-center bg-yellow-50 text-yellow-800">Meal Days (Ded)</th>
                                 <th class="px-4 py-3 text-right">Deductions</th>
                                 <th class="px-4 py-3 text-right font-bold text-blue-700">Net Payable ($)</th>
                                 <th class="px-4 py-3 text-right">TF ($)</th>
@@ -486,7 +465,7 @@
         </div>
     </div>
 
-    <!-- 2. DATA FORMAT GUIDE MODAL -->
+    <!-- 2. DATA FORMAT GUIDE MODAL (REVISED v3.0) -->
     <div id="formatHelpModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity" onclick="toggleFormatHelp()"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -514,18 +493,18 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
                                 <div class="font-bold text-blue-800 text-sm mb-1">Column 4: Hotel Days</div>
-                                <ul class="list-disc list-inside text-xs text-slate-600 space-y-1">
-                                    <li>Type <strong>Number</strong> (e.g., <code>3</code>) = Hotel provided for 3 days.</li>
-                                    <li>Type <strong>'Y'</strong> or <strong>'Yes'</strong> = Hotel provided for ALL mission days.</li>
-                                    <li>Type <strong>'N'</strong>, <strong>'0'</strong>, or leave blank = No hotel provided.</li>
+                                <ul class="list-disc list-inside text-xs text-slate-600 space-y-2">
+                                    <li>Type <strong>Number</strong> (e.g., <code>3</code>) = Accommodation provided <strong>FREE by organizer</strong> for 3 days (Deduction applies).</li>
+                                    <li>Type <strong>'Y'</strong> or <strong>'Yes'</strong> = Provided FREE for ALL days.</li>
+                                    <li>Type <strong>'N'</strong>, <strong>'0'</strong>, or blank = <strong>Self-paid</strong> (No deduction).</li>
                                 </ul>
                             </div>
                             <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
                                 <div class="font-bold text-yellow-800 text-sm mb-1">Column 5: Meal Days</div>
-                                <ul class="list-disc list-inside text-xs text-slate-600 space-y-1">
-                                    <li>Type <strong>Number</strong> (e.g., <code>2</code>) = Meals provided for 2 days.</li>
-                                    <li>Type <strong>'Y'</strong> or <strong>'Yes'</strong> = Meals provided for ALL days.</li>
-                                    <li>Type <strong>'N'</strong> or <strong>'0'</strong> = No meals provided.</li>
+                                <ul class="list-disc list-inside text-xs text-slate-600 space-y-2">
+                                    <li>Type <strong>Number</strong> (e.g., <code>2</code>) = Meals provided <strong>FREE by organizer</strong> for 2 days (Deduction applies).</li>
+                                    <li>Type <strong>'Y'</strong> or <strong>'Yes'</strong> = Provided FREE for ALL days.</li>
+                                    <li>Type <strong>'N'</strong> or <strong>'0'</strong> = <strong>Self-paid</strong> (No deduction).</li>
                                 </ul>
                             </div>
                         </div>
